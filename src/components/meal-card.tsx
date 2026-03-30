@@ -15,9 +15,14 @@ export function MealCard({
   onDuplicate: (entry: Entry) => void
   isHighlightedEntry: (entryId: string) => boolean
 }) {
+  const mealToneClass = `meal-${summary.key}`
+
   return (
     <section
-      className="glass-panel flex flex-col gap-5 rounded-[2rem] p-6"
+      className={cn(
+        'glass-panel content-lazy meal-panel flex flex-col gap-5 rounded-[2rem] p-6',
+        mealToneClass,
+      )}
       aria-labelledby={`meal-${summary.key}`}
     >
       <div className="flex items-start justify-between gap-4">
@@ -59,7 +64,10 @@ export function MealCard({
                   <span className="text-base font-semibold text-[var(--foreground)]">
                     {entry.food.name}
                   </span>
-                  <span className="rounded-full bg-[var(--surface-elevated)] px-2.5 py-1 text-xs text-[var(--muted-foreground)]">
+                  <span
+                    className="rounded-full px-2.5 py-1 text-xs font-semibold text-[var(--tone-strong-foreground)]"
+                    style={{ backgroundColor: 'var(--meal-accent)' }}
+                  >
                     {entry.quantity}×
                   </span>
                 </div>

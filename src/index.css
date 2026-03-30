@@ -7,7 +7,7 @@
 :root {
   --background: oklch(0.985 0.011 151);
   --foreground: oklch(0.238 0.033 167);
-  --muted-foreground: oklch(0.48 0.03 170);
+  --muted-foreground: oklch(0.39 0.03 170);
   --surface-topbar: oklch(0.99 0.008 146);
   --surface-subtle: color-mix(in oklab, white 86%, oklch(0.77 0.094 158) 14%);
   --surface-elevated: color-mix(in oklab, white 72%, oklch(0.9 0.03 155) 28%);
@@ -20,6 +20,10 @@
   --tone-strong-foreground: oklch(0.995 0.004 142);
   --warning: oklch(0.72 0.149 67);
   --danger: oklch(0.63 0.205 26);
+  --meal-breakfast: oklch(0.66 0.11 145);
+  --meal-lunch: oklch(0.64 0.08 184);
+  --meal-dinner: oklch(0.6 0.11 110);
+  --meal-snacks: oklch(0.71 0.11 74);
   --shadow-soft: 0 24px 60px rgba(31, 41, 55, 0.1);
   --shadow-lift: 0 30px 90px rgba(31, 41, 55, 0.16);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.35);
@@ -33,7 +37,7 @@
 .dark {
   --background: oklch(0.19 0.022 183);
   --foreground: oklch(0.965 0.015 142);
-  --muted-foreground: oklch(0.78 0.02 168);
+  --muted-foreground: oklch(0.85 0.018 168);
   --surface-topbar: oklch(0.24 0.022 184);
   --surface-subtle: color-mix(in oklab, oklch(0.26 0.02 184) 88%, oklch(0.62 0.1 156) 12%);
   --surface-elevated: color-mix(in oklab, oklch(0.29 0.022 184) 76%, oklch(0.68 0.09 156) 24%);
@@ -46,6 +50,10 @@
   --tone-strong-foreground: oklch(0.21 0.02 182);
   --warning: oklch(0.79 0.14 66);
   --danger: oklch(0.72 0.16 24);
+  --meal-breakfast: oklch(0.75 0.09 146);
+  --meal-lunch: oklch(0.73 0.08 184);
+  --meal-dinner: oklch(0.7 0.09 111);
+  --meal-snacks: oklch(0.8 0.08 74);
   --shadow-soft: 0 30px 80px rgba(3, 9, 15, 0.34);
   --shadow-lift: 0 36px 110px rgba(3, 9, 15, 0.45);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -150,6 +158,31 @@ img {
 
 .footer-link:hover {
   color: var(--foreground);
+}
+
+.meal-breakfast {
+  --meal-accent: var(--meal-breakfast);
+}
+
+.meal-lunch {
+  --meal-accent: var(--meal-lunch);
+}
+
+.meal-dinner {
+  --meal-accent: var(--meal-dinner);
+}
+
+.meal-snacks {
+  --meal-accent: var(--meal-snacks);
+}
+
+.meal-panel {
+  border-left: 4px solid var(--meal-accent);
+}
+
+.content-lazy {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 780px;
 }
 
 .entry-pop {

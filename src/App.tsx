@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useId, useState } from 'react'
+import { startTransition, useEffect, useId, useRef, useState } from 'react'
 import {
   AlertCircle,
   ArrowDown,
@@ -89,12 +89,52 @@ function App() {
   const [customServingLabel, setCustomServingLabel] = useState('1 plate')
   const [customServings, setCustomServings] = useState(1)
   const [foodCatalog, setFoodCatalog] = useState(featuredFoodCatalog)
+  const [catalogLoadState, setCatalogLoadState] = useState<'idle' | 'loading' | 'loaded' | 'error'>(
+    'idle',
+  )
+  const catalogLoadPromiseRef = useRef<Promise<FoodItem[]> | null>(null)
 
   const targetInputId = useId()
   const totals = getDailyTotals(state.entries, state.settings.dailyTarget)
   const mealSummaries = getMealSummaries(state.entries)
   const favoriteFoods = foodCatalog.filter((food) => state.favoriteFoodIds.includes(food.id))
   const recentFoods = state.recentFoods.slice(0, 4)
+
+  const ensureFoodCatalogLoaded = async () => {
+    if (catalogLoadState === 'loaded') {
+      return foodCatalog
+    }
+
+    if (catalogLoadPromiseRef.current) {
+      return catalogLoadPromiseRef.current
+    }
+
+    const loadPromise = (async () => {
+      setCatalogLoadState('loading')
+
+      try {
+        const response = await fetch(generatedFoodCatalogUrl)
+        if (!response.ok) {
+          throw new Error(`Failed to load ${generatedFoodCatalogUrl}`)
+        }
+
+        const importedFoodCatalog = (await response.json()) as FoodItem[]
+        const mergedCatalog = mergeFoodCatalogs(featuredFoodCatalog, importedFoodCatalog)
+        setFoodCatalog(mergedCatalog)
+        setCatalogLoadState('loaded')
+        return mergedCatalog
+      } catch {
+        setFoodCatalog(featuredFoodCatalog)
+        setCatalogLoadState('error')
+        return featuredFoodCatalog
+      } finally {
+        catalogLoadPromiseRef.current = null
+      }
+    })()
+
+    catalogLoadPromiseRef.current = loadPromise
+    return loadPromise
+  }
 
   const searchResults =
     submittedQuery.trim().length > 0 ? filterFoods(foodCatalog, submittedQuery.trim()) : foodCatalog
@@ -107,35 +147,6 @@ function App() {
   const visibleFoodResults = suggestedFoods.slice(0, visibleResults)
   const selectedFood =
     foodCatalog.find((food) => food.id === selectedFoodId) ?? visibleFoodResults[0] ?? null
-
-  useEffect(() => {
-    let active = true
-
-    const loadFoodCatalog = async () => {
-      try {
-        const response = await fetch(generatedFoodCatalogUrl)
-        if (!response.ok) {
-          throw new Error(`Failed to load ${generatedFoodCatalogUrl}`)
-        }
-
-        const importedFoodCatalog = (await response.json()) as FoodItem[]
-
-        if (active) {
-          setFoodCatalog(mergeFoodCatalogs(featuredFoodCatalog, importedFoodCatalog))
-        }
-      } catch {
-        if (active) {
-          setFoodCatalog(featuredFoodCatalog)
-        }
-      }
-    }
-
-    void loadFoodCatalog()
-
-    return () => {
-      active = false
-    }
-  }, [])
 
   useEffect(() => {
     setSelectedFoodId((current) => {
@@ -156,7 +167,7 @@ function App() {
     return () => window.clearTimeout(timeout)
   }, [clearAnimationMarker, lastAddedEntryId])
 
-  const runSearch = () => {
+  const runSearch = async () => {
     const trimmed = searchDraft.trim()
 
     if (!trimmed) {
@@ -166,7 +177,8 @@ function App() {
       return
     }
 
-    const matches = filterFoods(foodCatalog, trimmed)
+    const catalog = await ensureFoodCatalogLoaded()
+    const matches = filterFoods(catalog, trimmed)
     setSubmittedQuery(trimmed)
     setVisibleResults(25)
     setSearchWarning(
@@ -322,10 +334,10 @@ function App() {
                 <div className="space-y-5">
                   <p className="eyebrow">Friendly. Useful. Open source.</p>
                   <div className="space-y-4">
-                    <h1 className="max-w-[11ch] text-balance text-5xl font-semibold tracking-[-0.08em] text-[var(--foreground)] md:text-7xl">
+                    <h1 className="max-w-[13.5ch] text-balance text-[clamp(3.35rem,5vw,5.25rem)] font-semibold tracking-[-0.075em] text-[var(--foreground)]">
                       Track calories without turning your day into homework.
                     </h1>
-                    <p className="max-w-2xl text-lg leading-8 text-[var(--muted-foreground)] md:text-xl">
+                    <p className="max-w-xl text-base leading-8 text-[var(--muted-foreground)] md:text-lg">
                       Calorie Counter keeps the daily picture crisp: fast meal logging,
                       clear remaining calories, search-first food lookup, and enough motion
                       to feel alive without getting in your way.
@@ -353,9 +365,9 @@ function App() {
                 </div>
 
                 {!state.settings.dismissedOnboarding ? (
-                  <div className="grid gap-4 rounded-[1.75rem] border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] p-5 md:grid-cols-[1fr_auto] md:items-center">
+                  <div className="grid gap-4 rounded-[1.75rem] border border-[var(--tone-soft-border)] bg-[var(--surface-elevated)] p-5 md:grid-cols-[1fr_auto] md:items-center">
                     <div className="space-y-2">
-                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--tone-strong)]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--tone-strong)]">
                         Quick onboarding
                       </p>
                       <p className="text-sm leading-7 text-[var(--foreground)]">
@@ -443,7 +455,7 @@ function App() {
             </aside>
           </section>
           <section id="tracker" className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-            <aside className="glass-panel rounded-[2rem] p-6 md:p-8">
+            <aside className="glass-panel content-lazy rounded-[2rem] p-6 md:p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="eyebrow">Tracker setup</p>
@@ -567,13 +579,18 @@ function App() {
                     className="grid gap-3 md:grid-cols-[1fr_auto_auto]"
                     onSubmit={(event) => {
                       event.preventDefault()
-                      runSearch()
+                      void runSearch()
                     }}
                   >
                     <label className="relative">
                       <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
                       <Input
                         value={searchDraft}
+                        onFocus={() => {
+                          if (catalogLoadState === 'idle') {
+                            void ensureFoodCatalogLoaded()
+                          }
+                        }}
                         onChange={(event) => setSearchDraft(event.target.value)}
                         placeholder="Search foods by description"
                         className="pl-11"
@@ -590,9 +607,15 @@ function App() {
                   </form>
 
                   {searchWarning ? (
-                    <div className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] px-4 py-3 text-sm text-[var(--foreground)]">
+                    <div className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] px-4 py-3 text-sm leading-6 text-[var(--foreground)]">
                       <AlertCircle className="mt-0.5 size-4 shrink-0 text-[var(--tone-strong)]" />
                       <span>{searchWarning}</span>
+                    </div>
+                  ) : null}
+
+                  {catalogLoadState === 'loading' ? (
+                    <div className="rounded-[1.4rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] px-4 py-3 text-sm text-[var(--muted-foreground)]">
+                      Loading the full catalog in the background...
                     </div>
                   ) : null}
 
@@ -633,18 +656,18 @@ function App() {
                     </div>
                   ) : null}
 
-                  <div className="grid gap-3 md:grid-cols-[1.05fr_0.95fr]">
-                    <div className="rounded-[1.6rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
+                  <div className="grid gap-3 md:grid-cols-[1.1fr_0.9fr]">
+                    <div className="rounded-[1.6rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-4">
                       <div className="mb-4 flex items-center justify-between gap-3">
                         <div>
                           <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
                             Results
                           </p>
                           <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[var(--foreground)]">
-                            {submittedQuery ? `Matches for “${submittedQuery}”` : 'Suggested foods'}
+                            {submittedQuery ? `Matches for "${submittedQuery}"` : 'Suggested foods'}
                           </h3>
                         </div>
-                        <div className="rounded-full bg-[var(--surface-elevated)] px-3 py-2 text-sm font-medium text-[var(--foreground)]">
+                        <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                           {suggestedFoods.length} results
                         </div>
                       </div>
@@ -733,10 +756,10 @@ function App() {
 
                       {selectedFood ? (
                         <>
-                          <div className="rounded-[1.3rem] bg-[var(--surface-elevated)] p-4">
+                          <div className="rounded-[1.3rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-4">
                             <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
                               <span>Serving size</span>
-                              <span>{servings}×</span>
+                              <span>{servings}x</span>
                             </div>
                             <div className="mt-4">
                               <Slider
@@ -806,7 +829,7 @@ function App() {
                     <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
                       <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
                         <span>Quantity</span>
-                        <span>{customServings}×</span>
+                        <span>{customServings}x</span>
                       </div>
                       <div className="mt-4">
                         <Slider
@@ -834,7 +857,7 @@ function App() {
           </section>
 
           <section id="overview" className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-            <aside className="glass-panel rounded-[2rem] p-6 md:p-8">
+            <aside className="glass-panel content-lazy rounded-[2rem] p-6 md:p-8">
               <div className="space-y-6">
                 <div>
                   <p className="eyebrow">Daily overview</p>
@@ -848,28 +871,30 @@ function App() {
                   remaining={totals.remaining}
                   className="mx-auto"
                 />
-                <div className="grid gap-3">
-                  <div className="rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
-                    <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                      Best shortcut
+                <div className="rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
+                  <div className="grid gap-4 divide-y divide-[var(--border-soft)]">
+                    <div className="pb-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        Best shortcut
+                      </div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
+                        Favorites + recents
+                      </div>
+                      <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+                        Save food once, then repeat it with almost no friction.
+                      </p>
                     </div>
-                    <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
-                      Favorites + recents
+                    <div className="pt-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        Reset flow
+                      </div>
+                      <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
+                        Start fresh when you want
+                      </div>
+                      <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+                        The reset keeps preferences and favorites intact, so a new day never feels expensive.
+                      </p>
                     </div>
-                    <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-                      Save food once, then repeat it with almost no friction.
-                    </p>
-                  </div>
-                  <div className="rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
-                    <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                      Reset flow
-                    </div>
-                    <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
-                      Start fresh when you want
-                    </div>
-                    <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-                      The reset keeps preferences and favorites intact, so a new day never feels expensive.
-                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -896,7 +921,7 @@ function App() {
             </div>
           </section>
 
-          <section id="open-source" className="grid gap-6">
+          <section id="open-source" className="grid gap-6 content-lazy">
             <div className="glass-panel rounded-[2rem] p-6 md:p-8">
               <div className="space-y-4">
                 <p className="eyebrow">Open source build notes</p>
@@ -921,7 +946,7 @@ function App() {
               </div>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
+            <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
               <article className="glass-panel overflow-hidden rounded-[2rem]">
                 <img
                   src="https://picsum.photos/seed/calorie-counter-bowl/800/600.webp"
@@ -940,25 +965,27 @@ function App() {
                 </div>
               </article>
 
-              <article className="glass-panel rounded-[2rem] p-6">
-                <p className="eyebrow">Built for reuse</p>
-                <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
-                  Strong primitives, small state surface
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
-                  Type-safe tracker state, local JSON food data, and shadcn-friendly primitives make future iterations straightforward.
-                </p>
-              </article>
+              <div className="grid gap-6">
+                <article className="glass-panel rounded-[2rem] p-6">
+                  <p className="eyebrow">Built for reuse</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+                    Strong primitives, small state surface
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
+                    Type-safe tracker state, local JSON food data, and shadcn-friendly primitives make future iterations straightforward.
+                  </p>
+                </article>
 
-              <article className="glass-panel rounded-[2rem] p-6">
-                <p className="eyebrow">Privacy-first</p>
-                <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
-                  Your browser keeps the data
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
-                  No accounts, no sync pressure, no surprise server costs. Just a polished local tracker that loads fast and stays yours.
-                </p>
-              </article>
+                <article className="glass-panel rounded-[2rem] p-6">
+                  <p className="eyebrow">Privacy-first</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+                    Your browser keeps the data
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
+                    No accounts, no sync pressure, no surprise server costs. Just a polished local tracker that loads fast and stays yours.
+                  </p>
+                </article>
+              </div>
             </div>
           </section>
         </main>
