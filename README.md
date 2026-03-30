@@ -94,6 +94,7 @@ src/
 - WebMD calorie counter example
 
 The food dataset in this demo is intentionally curated and stored locally as JSON for a lighter front-end-only experience. It is structured so it can be replaced later with a fuller transformed dataset.
+If you have `My Foodapedia` files in `xlsx` or `xml`, they can be used as the source for a one-time import step that converts them into the local JSON catalog this app reads at startup.
 
 ## Roadmap ideas
 
@@ -105,10 +106,6 @@ The food dataset in this demo is intentionally curated and stored locally as JSO
 ## Contributing
 
 Issues, suggestions, and pull requests are welcome. If you fork this project, keep the experience lightweight, clear, and useful.
-
-## Author
-
-Built by a solo creator for a public open-source demo.
 
 ## License
 
