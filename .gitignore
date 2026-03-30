@@ -10,7 +10,12 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.vite
+.eslintcache
+*.tsbuildinfo
 *.local
+.env
+.env.*
 .vercel
 .netlify
 coverage

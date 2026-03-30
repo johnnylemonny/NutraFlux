@@ -6,7 +6,7 @@ A friendly, open-source calorie tracker built as a polished demo app. It combine
 
 This project started as an implementation of the advanced `Calorie Counter` challenge from App Ideas, then expanded into a more refined demo product:
 
-- Search foods from a local JSON dataset loaded at startup
+- Search foods from a local JSON dataset loaded on first use
 - Add foods into breakfast, lunch, dinner, and snacks
 - Track daily calorie target, consumed calories, and remaining budget
 - Save favorite foods and quickly re-add recent ones
@@ -93,7 +93,7 @@ src/
 - U.S. Department of Agriculture MyPyramid Food Raw Data
 - WebMD calorie counter example
 
-The food catalog is generated locally from the `food_tables/` exports in this repository and stored as JSON for a lighter front-end-only experience. The import script accepts the My Foodapedia XML/XLSX tables included in the repo and converts them into the catalog the app reads at startup.
+The food catalog is generated locally from the `food_tables/` exports in this repository and stored as JSON for a lighter front-end-only experience. The import script accepts the My Foodapedia XML/XLSX tables included in the repo and converts them into the catalog the app reads when the search flow is used.
 
 ## Roadmap ideas
 
