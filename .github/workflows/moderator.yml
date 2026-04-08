@@ -1,3 +1,4 @@
+---
 name: AI Moderator
 on:
   issues:
@@ -13,7 +14,6 @@ jobs:
     permissions:
       issues: write
       pull-requests: write
-      models: read
       contents: read
     steps:
       - uses: actions/checkout@v4
@@ -27,4 +27,4 @@ jobs:
           enable-spam-detection: true
           enable-link-spam-detection: true
           enable-ai-detection: true
-          # custom-prompt-path: '.github/prompts/my-custom.prompt.yml'  # Optional
+          # custom-prompt-path: '.github/prompts/my-custom.prompt.yml'
