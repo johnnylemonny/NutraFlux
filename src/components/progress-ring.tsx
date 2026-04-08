@@ -47,13 +47,13 @@ export function ProgressRing({
         />
       </svg>
       <div className="absolute flex flex-col items-center gap-1 text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--muted-foreground)]">
+        <span className="text-xs font-semibold uppercase tracking-[0.26em] text-(--muted-foreground)">
           Today
         </span>
-        <strong className="text-4xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+        <strong className="text-4xl font-semibold tracking-[-0.05em] text-(--foreground)">
           {consumed}
         </strong>
-        <span className="text-sm text-[var(--muted-foreground)]">
+        <span className="text-sm text-(--muted-foreground)">
           {remaining >= 0 ? `${remaining} kcal left` : `${Math.abs(remaining)} kcal over`}
         </span>
       </div>

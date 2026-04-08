@@ -27,13 +27,13 @@ function Slider({
       className={cn('relative flex w-full touch-none select-none items-center', className)}
       {...props}
     >
-      <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-[var(--surface-elevated-strong)]">
-        <SliderPrimitive.Range className="absolute h-full bg-[var(--tone-strong)]" />
+      <SliderPrimitive.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-(--surface-elevated-strong)">
+        <SliderPrimitive.Range className="absolute h-full bg-(--tone-strong)" />
       </SliderPrimitive.Track>
       {values.map((_, index) => (
         <SliderPrimitive.Thumb
           key={index}
-          className="block size-5 rounded-full border border-white/70 bg-[var(--tone-strong)] shadow-[var(--shadow-soft)] transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--tone-soft)]"
+          className="block size-5 rounded-full border border-white/70 bg-(--tone-strong) shadow-(--shadow-soft) transition-transform hover:scale-110 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-(--tone-soft)"
         />
       ))}
     </SliderPrimitive.Root>
