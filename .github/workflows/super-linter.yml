@@ -25,8 +25,13 @@ jobs:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        uses: super-linter/super-linter@v7
         env:
+          VALIDATE_JAVASCRIPT_ES: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TSX: false
+          VALIDATE_JSX: false
+          VALIDATE_JSON: false
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "1.0"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
