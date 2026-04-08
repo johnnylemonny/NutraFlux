@@ -20,7 +20,7 @@ export function MealCard({
   return (
     <section
       className={cn(
-        'glass-panel content-lazy meal-panel flex flex-col gap-5 rounded-[2rem] p-6',
+        'glass-panel content-lazy meal-panel flex flex-col gap-5 rounded-4xl p-6',
         mealToneClass,
       )}
       aria-labelledby={`meal-${summary.key}`}
@@ -32,16 +32,16 @@ export function MealCard({
             <h3 id={`meal-${summary.key}`} className="text-2xl font-semibold tracking-[-0.04em]">
               {summary.label}
             </h3>
-            <p className="max-w-[32ch] text-sm text-[var(--muted-foreground)]">
+            <p className="max-w-[32ch] text-sm text-(--muted-foreground)">
               {summary.description}
             </p>
           </div>
         </div>
-        <div className="rounded-full border border-[var(--border-soft)] bg-[var(--surface-elevated)] px-4 py-2 text-right">
-          <div className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+        <div className="rounded-full border border-(--border-soft) bg-(--surface-elevated) px-4 py-2 text-right">
+          <div className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
             Total
           </div>
-          <div className="text-xl font-semibold text-[var(--foreground)]">
+          <div className="text-xl font-semibold text-(--foreground)">
             {summary.totalCalories}
           </div>
         </div>
@@ -55,32 +55,32 @@ export function MealCard({
             <li
               key={entry.id}
               className={cn(
-                'group flex items-start justify-between gap-4 rounded-[1.6rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4 transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--surface-elevated)]',
-                isHighlightedEntry(entry.id) && 'entry-pop border-[var(--tone-soft-border)]',
+                'group flex items-start justify-between gap-4 rounded-[1.6rem] border border-(--border-soft) bg-(--surface-subtle) p-4 transition duration-300 hover:-translate-y-0.5 hover:border-(--border-strong) hover:bg-(--surface-elevated)',
+                isHighlightedEntry(entry.id) && 'entry-pop border-(--tone-soft-border)',
               )}
             >
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-base font-semibold text-[var(--foreground)]">
+                  <span className="text-base font-semibold text-(--foreground)">
                     {entry.food.name}
                   </span>
                   <span
-                    className="rounded-full px-2.5 py-1 text-xs font-semibold text-[var(--tone-strong-foreground)]"
+                    className="rounded-full px-2.5 py-1 text-xs font-semibold text-(--tone-strong-foreground)"
                     style={{ backgroundColor: 'var(--meal-accent)' }}
                   >
                     {entry.quantity}×
                   </span>
                 </div>
-                <p className="text-sm text-[var(--muted-foreground)]">
+                <p className="text-sm text-(--muted-foreground)">
                   {entry.food.servingLabel} • {formatMacroSummary(entry.food.macros)}
                 </p>
                 {entry.food.note ? (
-                  <p className="text-sm text-[var(--muted-foreground)]">{entry.food.note}</p>
+                  <p className="text-sm text-(--muted-foreground)">{entry.food.note}</p>
                 ) : null}
               </div>
 
               <div className="flex shrink-0 items-center gap-2">
-                <div className="rounded-full bg-[var(--surface-elevated)] px-3 py-2 text-sm font-semibold text-[var(--foreground)]">
+                <div className="rounded-full bg-(--surface-elevated) px-3 py-2 text-sm font-semibold text-(--foreground)">
                   {entry.totalCalories} kcal
                 </div>
                 <Button
@@ -97,12 +97,12 @@ export function MealCard({
           ))}
         </ul>
       ) : (
-        <div className="rounded-[1.8rem] border border-dashed border-[var(--border-soft)] bg-[var(--surface-subtle)] px-5 py-8 text-center">
-          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-[var(--surface-elevated)] text-[var(--tone-strong)]">
+        <div className="rounded-[1.8rem] border border-dashed border-(--border-soft) bg-(--surface-subtle) px-5 py-8 text-center">
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-(--surface-elevated) text-(--tone-strong)">
             <Flame className="size-5" />
           </div>
-          <h4 className="text-lg font-semibold text-[var(--foreground)]">Nothing logged yet</h4>
-          <p className="mt-2 text-sm text-[var(--muted-foreground)]">
+          <h4 className="text-lg font-semibold text-(--foreground)">Nothing logged yet</h4>
+          <p className="mt-2 text-sm text-(--muted-foreground)">
             Add your first item to start building a clean daily picture.
           </p>
         </div>
