@@ -67,7 +67,7 @@ Recommended setup:
 2. In GitHub, enable `Pages` and choose `GitHub Actions` as the source.
 3. The included workflow will build and deploy the `dist` folder automatically on pushes to `main`.
 
-/## Screenshots
+<!-- ## Screenshots -->
 
 
 ## Project structure
