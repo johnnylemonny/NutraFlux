@@ -26,9 +26,9 @@ This project started as an implementation of the advanced `Calorie Counter` chal
 ## Tech stack
 
 - Vite
-- React 19
+- React
 - TypeScript
-- Tailwind CSS 4
+- Tailwind CSS
 - shadcn-friendly UI primitives
 - Lucide icons
 - Sonner toasts
@@ -67,14 +67,8 @@ Recommended setup:
 2. In GitHub, enable `Pages` and choose `GitHub Actions` as the source.
 3. The included workflow will build and deploy the `dist` folder automatically on pushes to `main`.
 
-## Screenshots
+/## Screenshots
 
-Add screenshots or short GIFs after the first public release:
-
-- hero and tracker overview
-- search results panel
-- dark mode
-- mobile layout
 
 ## Project structure
 
