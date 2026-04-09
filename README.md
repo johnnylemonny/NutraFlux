@@ -1,10 +1,10 @@
 # Calorie Counter
 
-A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing.
+A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing. Inspired by the advanced project idea from [App Ideas](https://github.com/florinpop17/app-ideas)
 
 ## Why this project exists
 
-This project started as an implementation of the advanced `Calorie Counter` challenge from App Ideas, then expanded into a more refined demo product:
+This project started as an implementation of `Calorie Counter` challenge, then expanded into a more refined demo product:
 
 - Search foods from a local JSON dataset loaded on first use
 - Add foods into breakfast, lunch, dinner, and snacks
