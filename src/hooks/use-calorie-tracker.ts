@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { buildDemoEntries, createEntry, toRecentFood } from '@/lib/tracker'
 import type { FoodSnapshot, MealKey, ThemePreference, TrackerState } from '@/types'
 
-const STORAGE_KEY = 'calorie-counter::tracker::v1'
+const STORAGE_KEY = 'nutraflux::tracker::v1'
 
 const defaultState: TrackerState = {
   settings: {

@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useId, useState } from 'react'
+import { startTransition, useEffect, useId, useRef, useState } from 'react'
 import {
   AlertCircle,
   ArrowDown,
@@ -89,12 +89,52 @@ function App() {
   const [customServingLabel, setCustomServingLabel] = useState('1 plate')
   const [customServings, setCustomServings] = useState(1)
   const [foodCatalog, setFoodCatalog] = useState(featuredFoodCatalog)
+  const [catalogLoadState, setCatalogLoadState] = useState<'idle' | 'loading' | 'loaded' | 'error'>(
+    'idle',
+  )
+  const catalogLoadPromiseRef = useRef<Promise<FoodItem[]> | null>(null)
 
   const targetInputId = useId()
   const totals = getDailyTotals(state.entries, state.settings.dailyTarget)
   const mealSummaries = getMealSummaries(state.entries)
   const favoriteFoods = foodCatalog.filter((food) => state.favoriteFoodIds.includes(food.id))
   const recentFoods = state.recentFoods.slice(0, 4)
+
+  const ensureFoodCatalogLoaded = async () => {
+    if (catalogLoadState === 'loaded') {
+      return foodCatalog
+    }
+
+    if (catalogLoadPromiseRef.current) {
+      return catalogLoadPromiseRef.current
+    }
+
+    const loadPromise = (async () => {
+      setCatalogLoadState('loading')
+
+      try {
+        const response = await fetch(generatedFoodCatalogUrl)
+        if (!response.ok) {
+          throw new Error(`Failed to load ${generatedFoodCatalogUrl}`)
+        }
+
+        const importedFoodCatalog = (await response.json()) as FoodItem[]
+        const mergedCatalog = mergeFoodCatalogs(featuredFoodCatalog, importedFoodCatalog)
+        setFoodCatalog(mergedCatalog)
+        setCatalogLoadState('loaded')
+        return mergedCatalog
+      } catch {
+        setFoodCatalog(featuredFoodCatalog)
+        setCatalogLoadState('error')
+        return featuredFoodCatalog
+      } finally {
+        catalogLoadPromiseRef.current = null
+      }
+    })()
+
+    catalogLoadPromiseRef.current = loadPromise
+    return loadPromise
+  }
 
   const searchResults =
     submittedQuery.trim().length > 0 ? filterFoods(foodCatalog, submittedQuery.trim()) : foodCatalog
@@ -107,35 +147,6 @@ function App() {
   const visibleFoodResults = suggestedFoods.slice(0, visibleResults)
   const selectedFood =
     foodCatalog.find((food) => food.id === selectedFoodId) ?? visibleFoodResults[0] ?? null
-
-  useEffect(() => {
-    let active = true
-
-    const loadFoodCatalog = async () => {
-      try {
-        const response = await fetch(generatedFoodCatalogUrl)
-        if (!response.ok) {
-          throw new Error(`Failed to load ${generatedFoodCatalogUrl}`)
-        }
-
-        const importedFoodCatalog = (await response.json()) as FoodItem[]
-
-        if (active) {
-          setFoodCatalog(mergeFoodCatalogs(featuredFoodCatalog, importedFoodCatalog))
-        }
-      } catch {
-        if (active) {
-          setFoodCatalog(featuredFoodCatalog)
-        }
-      }
-    }
-
-    void loadFoodCatalog()
-
-    return () => {
-      active = false
-    }
-  }, [])
 
   useEffect(() => {
     setSelectedFoodId((current) => {
@@ -156,7 +167,7 @@ function App() {
     return () => window.clearTimeout(timeout)
   }, [clearAnimationMarker, lastAddedEntryId])
 
-  const runSearch = () => {
+  const runSearch = async () => {
     const trimmed = searchDraft.trim()
 
     if (!trimmed) {
@@ -166,7 +177,8 @@ function App() {
       return
     }
 
-    const matches = filterFoods(foodCatalog, trimmed)
+    const catalog = await ensureFoodCatalogLoaded()
+    const matches = filterFoods(catalog, trimmed)
     setSubmittedQuery(trimmed)
     setVisibleResults(25)
     setSearchWarning(
@@ -273,26 +285,26 @@ function App() {
         <div className="hero-blur hero-blur-one" />
         <div className="hero-blur hero-blur-two" />
 
-        <header className="sticky top-0 z-40 border-b border-[var(--border-soft)] bg-[color:var(--surface-topbar)]/85 backdrop-blur-xl">
+        <header className="sticky top-0 z-40 border-b border-(--border-soft) bg-(--surface-topbar)/85 backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 md:px-8">
             <a href="#top" className="flex items-center gap-3">
               <LogoMark className="size-11" />
               <div>
-                <div className="text-base font-semibold tracking-[-0.03em] text-[var(--foreground)]">
-                  Calorie Counter
+                <div className="text-base font-semibold tracking-[-0.03em] text-(--foreground)">
+                  NutraFlux
                 </div>
-                <div className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+                <div className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                   local-first daily tracker
                 </div>
               </div>
             </a>
 
-            <nav className="hidden items-center gap-2 rounded-full border border-[var(--border-soft)] bg-[var(--surface-elevated)] px-2 py-1 md:flex">
+            <nav className="hidden items-center gap-2 rounded-full border border-(--border-soft) bg-(--surface-elevated) px-2 py-1 md:flex">
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="rounded-full px-4 py-2 text-sm font-medium text-[var(--muted-foreground)] transition hover:bg-[var(--surface-subtle)] hover:text-[var(--foreground)]"
+                  className="rounded-full px-4 py-2 text-sm font-medium text-(--muted-foreground) transition hover:bg-(--surface-subtle) hover:text-(--foreground)"
                 >
                   {item.label}
                 </a>
@@ -316,17 +328,17 @@ function App() {
 
         <main id="top" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 pb-16 pt-8 md:px-8 md:pb-24 md:pt-12">
           <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="glass-panel relative overflow-hidden rounded-[2rem] p-6 md:p-8">
+            <div className="glass-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.55),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(82,183,136,0.16),transparent_36%)]" />
               <div className="relative flex flex-col gap-8">
                 <div className="space-y-5">
                   <p className="eyebrow">Friendly. Useful. Open source.</p>
                   <div className="space-y-4">
-                    <h1 className="max-w-[11ch] text-balance text-5xl font-semibold tracking-[-0.08em] text-[var(--foreground)] md:text-7xl">
+                    <h1 className="max-w-[13.5ch] text-balance text-[clamp(3.35rem,5vw,5.25rem)] font-semibold tracking-[-0.075em] text-(--foreground)">
                       Track calories without turning your day into homework.
                     </h1>
-                    <p className="max-w-2xl text-lg leading-8 text-[var(--muted-foreground)] md:text-xl">
-                      Calorie Counter keeps the daily picture crisp: fast meal logging,
+                    <p className="max-w-xl text-base leading-8 text-(--muted-foreground) md:text-lg">
+                      NutraFlux keeps the daily picture crisp: fast meal logging,
                       clear remaining calories, search-first food lookup, and enough motion
                       to feel alive without getting in your way.
                     </p>
@@ -345,7 +357,7 @@ function App() {
                     <Sparkles className="size-4" />
                   </Button>
                   <Button asChild variant="ghost">
-                    <a href="https://github.com/johnnylemonny/Calorie-Counter" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/johnnylemonny/NutraFlux" target="_blank" rel="noreferrer">
                       View source
                       <GitBranch className="size-4" />
                     </a>
@@ -353,12 +365,12 @@ function App() {
                 </div>
 
                 {!state.settings.dismissedOnboarding ? (
-                  <div className="grid gap-4 rounded-[1.75rem] border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] p-5 md:grid-cols-[1fr_auto] md:items-center">
+                  <div className="grid gap-4 rounded-[1.75rem] border border-(--tone-soft-border) bg-(--surface-elevated) p-5 md:grid-cols-[1fr_auto] md:items-center">
                     <div className="space-y-2">
-                      <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[var(--tone-strong)]">
+                      <p className="text-xs font-semibold uppercase tracking-[0.26em] text-(--tone-strong)">
                         Quick onboarding
                       </p>
-                      <p className="text-sm leading-7 text-[var(--foreground)]">
+                      <p className="text-sm leading-7 text-(--foreground)">
                         Set your daily target, search foods with a keyword or wildcard,
                         add a result, then reuse favorites and recents to move faster tomorrow.
                       </p>
@@ -371,7 +383,7 @@ function App() {
               </div>
             </div>
 
-            <aside className="glass-panel relative overflow-hidden rounded-[2rem] p-6 md:p-8">
+            <aside className="glass-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(82,183,136,0.1),transparent_52%)]" />
               <div className="relative flex h-full flex-col gap-6">
                 <div className="flex items-center justify-between">
@@ -381,38 +393,38 @@ function App() {
                       Today at a glance
                     </h2>
                   </div>
-                  <div className="rounded-full bg-[var(--surface-elevated)] px-3 py-2 text-sm font-medium text-[var(--muted-foreground)]">
+                  <div className="rounded-full bg-(--surface-elevated) px-3 py-2 text-sm font-medium text-(--muted-foreground)">
                     {resolvedTheme} mode
                   </div>
                 </div>
 
-                <div className="grid gap-4 rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5">
-                  <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
+                <div className="grid gap-4 rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5">
+                  <div className="flex items-center justify-between text-sm text-(--muted-foreground)">
                     <span>Daily target</span>
                     <span>{state.settings.dailyTarget} kcal</span>
                   </div>
-                  <div className="h-3 overflow-hidden rounded-full bg-[var(--surface-elevated-strong)]">
+                  <div className="h-3 overflow-hidden rounded-full bg-(--surface-elevated-strong)">
                     <div
-                      className="h-full rounded-full bg-[var(--tone-strong)] transition-[width] duration-500 ease-out"
+                      className="h-full rounded-full bg-(--tone-strong) transition-[width] duration-500 ease-out"
                       style={{ width: `${Math.min(totals.progress, 1) * 100}%` }}
                     />
                   </div>
                   <div className="grid grid-cols-3 gap-3 text-sm">
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="text-[var(--muted-foreground)]">Consumed</div>
-                      <div className="mt-1 text-2xl font-semibold text-[var(--foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="text-(--muted-foreground)">Consumed</div>
+                      <div className="mt-1 text-2xl font-semibold text-(--foreground)">
                         {totals.consumed}
                       </div>
                     </div>
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="text-[var(--muted-foreground)]">Remaining</div>
-                      <div className="mt-1 text-2xl font-semibold text-[var(--foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="text-(--muted-foreground)">Remaining</div>
+                      <div className="mt-1 text-2xl font-semibold text-(--foreground)">
                         {totals.remaining}
                       </div>
                     </div>
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="text-[var(--muted-foreground)]">Entries</div>
-                      <div className="mt-1 text-2xl font-semibold text-[var(--foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="text-(--muted-foreground)">Entries</div>
+                      <div className="mt-1 text-2xl font-semibold text-(--foreground)">
                         {state.entries.length}
                       </div>
                     </div>
@@ -423,17 +435,17 @@ function App() {
                   {mealSummaries.map((summary) => (
                     <div
                       key={summary.key}
-                      className="flex items-center justify-between rounded-[1.4rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] px-4 py-3"
+                      className="flex items-center justify-between rounded-[1.4rem] border border-(--border-soft) bg-(--surface-subtle) px-4 py-3"
                     >
                       <div>
-                        <div className="text-sm font-semibold text-[var(--foreground)]">
+                        <div className="text-sm font-semibold text-(--foreground)">
                           {summary.label}
                         </div>
-                        <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
                           {summary.entries.length} items
                         </div>
                       </div>
-                      <div className="text-sm font-semibold text-[var(--foreground)]">
+                      <div className="text-sm font-semibold text-(--foreground)">
                         {summary.totalCalories} kcal
                       </div>
                     </div>
@@ -443,20 +455,20 @@ function App() {
             </aside>
           </section>
           <section id="tracker" className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-            <aside className="glass-panel rounded-[2rem] p-6 md:p-8">
+            <aside className="glass-panel content-lazy rounded-4xl p-6 md:p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="eyebrow">Tracker setup</p>
-                  <h2 className="text-3xl font-semibold tracking-[-0.06em] text-[var(--foreground)]">
+                  <h2 className="text-3xl font-semibold tracking-[-0.06em] text-(--foreground)">
                     Build your day in a few taps
                   </h2>
-                  <p className="text-sm leading-7 text-[var(--muted-foreground)]">
+                  <p className="text-sm leading-7 text-(--muted-foreground)">
                     Choose a target, pick the meal you are logging, and search the local JSON food list.
                   </p>
                 </div>
 
-                <div className="rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5">
-                  <label htmlFor={targetInputId} className="text-sm font-semibold text-[var(--foreground)]">
+                <div className="rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5">
+                  <label htmlFor={targetInputId} className="text-sm font-semibold text-(--foreground)">
                     Daily calorie target
                   </label>
                   <div className="mt-3 flex items-center gap-3">
@@ -471,7 +483,7 @@ function App() {
                         }
                       }}
                     />
-                    <div className="rounded-2xl bg-[var(--surface-subtle)] px-4 py-3 text-sm text-[var(--muted-foreground)]">
+                    <div className="rounded-2xl bg-(--surface-subtle) px-4 py-3 text-sm text-(--muted-foreground)">
                       kcal
                     </div>
                   </div>
@@ -490,8 +502,8 @@ function App() {
                   </div>
                 </div>
 
-                <div className="rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5">
-                  <p className="text-sm font-semibold text-[var(--foreground)]">Meal focus</p>
+                <div className="rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5">
+                  <p className="text-sm font-semibold text-(--foreground)">Meal focus</p>
                   <div className="mt-4 grid grid-cols-2 gap-2">
                     {(Object.keys(mealMeta) as MealKey[]).map((meal) => (
                       <button
@@ -500,8 +512,8 @@ function App() {
                         className={cn(
                           'rounded-[1.4rem] border px-4 py-3 text-left transition duration-300',
                           selectedMeal === meal
-                            ? 'border-[var(--tone-soft-border)] bg-[var(--tone-soft)] text-[var(--foreground)]'
-                            : 'border-[var(--border-soft)] bg-[var(--surface-subtle)] text-[var(--muted-foreground)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-elevated)] hover:text-[var(--foreground)]',
+                            ? 'border-(--tone-soft-border) bg-(--tone-soft) text-(--foreground)'
+                            : 'border-(--border-soft) bg-(--surface-subtle) text-(--muted-foreground) hover:border-(--border-strong) hover:bg-(--surface-elevated) hover:text-(--foreground)',
                         )}
                         onClick={() => setSelectedMeal(meal)}
                       >
@@ -514,30 +526,30 @@ function App() {
                   </div>
                 </div>
 
-                <div className="rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5">
+                <div className="rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-[var(--foreground)]">Quick signals</p>
-                      <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+                      <p className="text-sm font-semibold text-(--foreground)">Quick signals</p>
+                      <p className="mt-1 text-sm text-(--muted-foreground)">
                         A few clues to keep the flow easy.
                       </p>
                     </div>
-                    <Sparkles className="size-5 text-[var(--tone-strong)]" />
+                    <Sparkles className="size-5 text-(--tone-strong)" />
                   </div>
                   <div className="mt-4 grid gap-3">
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
                         Search bonus
                       </div>
-                      <div className="mt-2 text-sm font-medium text-[var(--foreground)]">
+                      <div className="mt-2 text-sm font-medium text-(--foreground)">
                         Wildcards are supported. Try `chicken*` or `*salad`.
                       </div>
                     </div>
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
                         Momentum
                       </div>
-                      <div className="mt-2 text-sm font-medium text-[var(--foreground)]">
+                      <div className="mt-2 text-sm font-medium text-(--foreground)">
                         {totals.remaining >= 0
                           ? `You are ${totals.remaining} kcal away from your target.`
                           : `You are ${Math.abs(totals.remaining)} kcal above target today.`}
@@ -548,32 +560,37 @@ function App() {
               </div>
             </aside>
 
-            <div className="glass-panel rounded-[2rem] p-6 md:p-8">
+            <div className="glass-panel rounded-4xl p-6 md:p-8">
               <div className="grid gap-6">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div>
                     <p className="eyebrow">Search and add</p>
-                    <h2 className="text-3xl font-semibold tracking-[-0.06em] text-[var(--foreground)]">
+                    <h2 className="text-3xl font-semibold tracking-[-0.06em] text-(--foreground)">
                       Search the food list, then log it fast
                     </h2>
                   </div>
-                  <div className="rounded-full border border-[var(--border-soft)] bg-[var(--surface-elevated)] px-4 py-2 text-sm text-[var(--muted-foreground)]">
+                  <div className="rounded-full border border-(--border-soft) bg-(--surface-elevated) px-4 py-2 text-sm text-(--muted-foreground)">
                     Logging to {mealMeta[selectedMeal].label}
                   </div>
                 </div>
 
-                <div className="grid gap-4 rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5">
+                <div className="grid gap-4 rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5">
                   <form
                     className="grid gap-3 md:grid-cols-[1fr_auto_auto]"
                     onSubmit={(event) => {
                       event.preventDefault()
-                      runSearch()
+                      void runSearch()
                     }}
                   >
                     <label className="relative">
-                      <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
+                      <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-(--muted-foreground)" />
                       <Input
                         value={searchDraft}
+                        onFocus={() => {
+                          if (catalogLoadState === 'idle') {
+                            void ensureFoodCatalogLoaded()
+                          }
+                        }}
                         onChange={(event) => setSearchDraft(event.target.value)}
                         placeholder="Search foods by description"
                         className="pl-11"
@@ -590,9 +607,15 @@ function App() {
                   </form>
 
                   {searchWarning ? (
-                    <div className="flex items-start gap-3 rounded-[1.4rem] border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] px-4 py-3 text-sm text-[var(--foreground)]">
-                      <AlertCircle className="mt-0.5 size-4 shrink-0 text-[var(--tone-strong)]" />
+                    <div className="flex items-start gap-3 rounded-[1.4rem] border border-(--tone-soft-border) bg-(--tone-soft) px-4 py-3 text-sm leading-6 text-(--foreground)">
+                      <AlertCircle className="mt-0.5 size-4 shrink-0 text-(--tone-strong)" />
                       <span>{searchWarning}</span>
+                    </div>
+                  ) : null}
+
+                  {catalogLoadState === 'loading' ? (
+                    <div className="rounded-[1.4rem] border border-(--border-soft) bg-(--surface-subtle) px-4 py-3 text-sm text-(--muted-foreground)">
+                      Loading the full catalog in the background...
                     </div>
                   ) : null}
 
@@ -602,7 +625,7 @@ function App() {
                         <button
                           key={food.id}
                           type="button"
-                          className="inline-flex items-center gap-2 rounded-full border border-[var(--tone-soft-border)] bg-[var(--tone-soft)] px-4 py-2 text-sm font-medium text-[var(--foreground)] transition hover:-translate-y-0.5"
+                          className="inline-flex items-center gap-2 rounded-full border border-(--tone-soft-border) bg-(--tone-soft) px-4 py-2 text-sm font-medium text-(--foreground) transition hover:-translate-y-0.5"
                           onClick={() => setSelectedFoodId(food.id)}
                         >
                           <Heart className="size-4 fill-current" />
@@ -614,7 +637,7 @@ function App() {
 
                   {recentFoods.length > 0 ? (
                     <div>
-                      <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+                      <div className="mb-3 flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                         <RefreshCcw className="size-3.5" />
                         Recent foods
                       </div>
@@ -623,7 +646,7 @@ function App() {
                           <button
                             key={`${food.name}-${food.usedAt}`}
                             type="button"
-                            className="rounded-full border border-[var(--border-soft)] bg-[var(--surface-subtle)] px-4 py-2 text-sm text-[var(--foreground)] transition hover:-translate-y-0.5 hover:border-[var(--border-strong)]"
+                            className="rounded-full border border-(--border-soft) bg-(--surface-subtle) px-4 py-2 text-sm text-(--foreground) transition hover:-translate-y-0.5 hover:border-(--border-strong)"
                             onClick={() => handleAddRecentFood(food)}
                           >
                             {food.name}
@@ -633,74 +656,81 @@ function App() {
                     </div>
                   ) : null}
 
-                  <div className="grid gap-3 md:grid-cols-[1.05fr_0.95fr]">
-                    <div className="rounded-[1.6rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
+                  <div className="grid gap-3 md:grid-cols-[1.1fr_0.9fr]">
+                    <div className="rounded-[1.6rem] border border-(--border-soft) bg-(--surface-elevated) p-4">
                       <div className="mb-4 flex items-center justify-between gap-3">
                         <div>
-                          <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+                          <p className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                             Results
                           </p>
-                          <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-[var(--foreground)]">
-                            {submittedQuery ? `Matches for “${submittedQuery}”` : 'Suggested foods'}
+                          <h3 className="mt-2 text-xl font-semibold tracking-[-0.04em] text-(--foreground)">
+                            {submittedQuery ? `Matches for "${submittedQuery}"` : 'Suggested foods'}
                           </h3>
                         </div>
-                        <div className="rounded-full bg-[var(--surface-elevated)] px-3 py-2 text-sm font-medium text-[var(--foreground)]">
+                        <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
                           {suggestedFoods.length} results
                         </div>
                       </div>
 
-                      <div className="max-h-[29rem] space-y-3 overflow-y-auto pr-1">
+                      <div className="max-h-116 space-y-3 overflow-y-auto pr-1">
                         {visibleFoodResults.map((food) => {
                           const isSelected = selectedFood?.id === food.id
                           const isFavorite = state.favoriteFoodIds.includes(food.id)
 
                           return (
-                            <button
-                              key={food.id}
-                              type="button"
-                              className={cn(
-                                'group w-full rounded-[1.5rem] border p-4 text-left transition duration-300 hover:-translate-y-0.5',
-                                isSelected
-                                  ? 'border-[var(--tone-soft-border)] bg-[var(--tone-soft)]'
-                                  : 'border-[var(--border-soft)] bg-[var(--surface-elevated)] hover:border-[var(--border-strong)] hover:bg-[var(--surface-elevated-strong)]',
-                              )}
-                              onClick={() => setSelectedFoodId(food.id)}
-                            >
-                              <div className="flex items-start justify-between gap-3">
-                                <div>
-                                  <div className="text-sm font-semibold text-[var(--foreground)]">
-                                    {food.name}
-                                  </div>
-                                  <div className="mt-1 text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                                    {food.category}
-                                  </div>
-                                </div>
-                                <button
-                                  type="button"
-                                  aria-label={isFavorite ? `Remove ${food.name} from favorites` : `Save ${food.name} as favorite`}
-                                  className={cn(
-                                    'rounded-full p-2 transition',
-                                    isFavorite
-                                      ? 'bg-[var(--tone-soft)] text-[var(--tone-strong)]'
-                                      : 'bg-[var(--surface-subtle)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]',
-                                  )}
-                                  onClick={(event) => {
-                                    event.stopPropagation()
-                                    toggleFavorite(food.id)
-                                  }}
-                                >
-                                  <Star className={cn('size-4', isFavorite && 'fill-current')} />
-                                </button>
-                              </div>
-                              <div className="mt-4 flex items-center justify-between gap-3">
-                                <span className="text-sm text-[var(--muted-foreground)]">
-                                  {food.servingLabel}
-                                </span>
-                                <span className="rounded-full bg-[var(--surface-subtle)] px-3 py-1 text-sm font-semibold text-[var(--foreground)]">
-                                  {food.calories} kcal
-                                </span>
-                              </div>
-                            </button>
+                             <div
+                               key={food.id}
+                               role="button"
+                               tabIndex={0}
+                               className={cn(
+                                 'group w-full rounded-3xl border p-4 text-left transition duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--tone-strong)',
+                                 isSelected
+                                   ? 'border-(--tone-soft-border) bg-(--tone-soft)'
+                                   : 'border-(--border-soft) bg-(--surface-elevated) hover:border-(--border-strong) hover:bg-(--surface-elevated-strong)',
+                               )}
+                               onClick={() => setSelectedFoodId(food.id)}
+                               onKeyDown={(event) => {
+                                 if (event.key === 'Enter' || event.key === ' ') {
+                                   event.preventDefault()
+                                   setSelectedFoodId(food.id)
+                                 }
+                               }}
+                             >
+                               <div className="flex items-start justify-between gap-3">
+                                 <div>
+                                   <div className="text-sm font-semibold text-(--foreground)">
+                                     {food.name}
+                                   </div>
+                                   <div className="mt-1 text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
+                                     {food.category}
+                                   </div>
+                                 </div>
+                                 <button
+                                   type="button"
+                                   aria-label={isFavorite ? `Remove ${food.name} from favorites` : `Save ${food.name} as favorite`}
+                                   className={cn(
+                                     'rounded-full p-2 transition',
+                                     isFavorite
+                                       ? 'bg-(--tone-soft) text-(--tone-strong)'
+                                       : 'bg-(--surface-subtle) text-(--muted-foreground) hover:text-(--foreground)',
+                                   )}
+                                   onClick={(event) => {
+                                     event.stopPropagation()
+                                     toggleFavorite(food.id)
+                                   }}
+                                 >
+                                   <Star className={cn('size-4', isFavorite && 'fill-current')} />
+                                 </button>
+                               </div>
+                               <div className="mt-4 flex items-center justify-between gap-3">
+                                 <span className="text-sm text-(--muted-foreground)">
+                                   {food.servingLabel}
+                                 </span>
+                                 <span className="rounded-full bg-(--surface-subtle) px-3 py-1 text-sm font-semibold text-(--foreground)">
+                                   {food.calories} kcal
+                                 </span>
+                               </div>
+                             </div>
                           )
                         })}
                       </div>
@@ -718,25 +748,25 @@ function App() {
                       ) : null}
                     </div>
 
-                    <div className="grid gap-4 rounded-[1.6rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-5">
+                    <div className="grid gap-4 rounded-[1.6rem] border border-(--border-soft) bg-(--surface-subtle) p-5">
                       <div className="space-y-2">
-                        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+                        <p className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                           Selected food
                         </p>
-                        <h3 className="text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+                        <h3 className="text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
                           {selectedFood?.name ?? 'Pick something from the list'}
                         </h3>
-                        <p className="text-sm text-[var(--muted-foreground)]">
+                        <p className="text-sm text-(--muted-foreground)">
                           {selectedFood?.note ?? selectedFood?.category ?? 'Fast add keeps you moving.'}
                         </p>
                       </div>
 
                       {selectedFood ? (
                         <>
-                          <div className="rounded-[1.3rem] bg-[var(--surface-elevated)] p-4">
-                            <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
+                          <div className="rounded-[1.3rem] border border-(--border-soft) bg-(--surface-elevated) p-4">
+                            <div className="flex items-center justify-between text-sm text-(--muted-foreground)">
                               <span>Serving size</span>
-                              <span>{servings}×</span>
+                              <span>{servings}x</span>
                             </div>
                             <div className="mt-4">
                               <Slider
@@ -747,14 +777,14 @@ function App() {
                                 onValueChange={([value]) => setServings(value ?? 1)}
                               />
                             </div>
-                            <div className="mt-4 flex items-center justify-between text-sm text-[var(--muted-foreground)]">
+                            <div className="mt-4 flex items-center justify-between text-sm text-(--muted-foreground)">
                               <span>{selectedFood.servingLabel}</span>
                               <span>{Math.round(selectedFood.calories * servings)} kcal</span>
                             </div>
                           </div>
 
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--muted-foreground)]">
-                            <CheckCheck className="size-4 text-[var(--tone-strong)]" />
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-(--muted-foreground)">
+                            <CheckCheck className="size-4 text-(--tone-strong)" />
                             <span>{formatMacroSummary(selectedFood.macros)}</span>
                           </div>
 
@@ -764,7 +794,7 @@ function App() {
                           </Button>
                         </>
                       ) : (
-                        <div className="rounded-[1.4rem] border border-dashed border-[var(--border-soft)] p-6 text-sm text-[var(--muted-foreground)]">
+                        <div className="rounded-[1.4rem] border border-dashed border-(--border-soft) p-6 text-sm text-(--muted-foreground)">
                           Search for a food or clear the search to see suggestions.
                         </div>
                       )}
@@ -773,13 +803,13 @@ function App() {
 
                   <Separator />
 
-                  <div className="grid gap-4 rounded-[1.8rem] border border-[var(--border-soft)] bg-[var(--surface-elevated)] p-5 md:grid-cols-[1.2fr_0.8fr]">
+                  <div className="grid gap-4 rounded-[1.8rem] border border-(--border-soft) bg-(--surface-elevated) p-5 md:grid-cols-[1.2fr_0.8fr]">
                     <div className="space-y-4">
                       <div>
-                        <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+                        <p className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                           Custom item
                         </p>
-                        <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+                        <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
                           Add something not in the food list
                         </h3>
                       </div>
@@ -803,10 +833,10 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="rounded-[1.4rem] bg-[var(--surface-subtle)] p-4">
-                      <div className="flex items-center justify-between text-sm text-[var(--muted-foreground)]">
+                    <div className="rounded-[1.4rem] bg-(--surface-subtle) p-4">
+                      <div className="flex items-center justify-between text-sm text-(--muted-foreground)">
                         <span>Quantity</span>
-                        <span>{customServings}×</span>
+                        <span>{customServings}x</span>
                       </div>
                       <div className="mt-4">
                         <Slider
@@ -817,9 +847,9 @@ function App() {
                           onValueChange={([value]) => setCustomServings(value ?? 1)}
                         />
                       </div>
-                      <div className="mt-4 text-sm text-[var(--muted-foreground)]">
+                      <div className="mt-4 text-sm text-(--muted-foreground)">
                         Preview{' '}
-                        <span className="font-semibold text-[var(--foreground)]">
+                        <span className="font-semibold text-(--foreground)">
                           {Math.round(Number(customCalories || 0) * customServings) || 0} kcal
                         </span>
                       </div>
@@ -834,11 +864,11 @@ function App() {
           </section>
 
           <section id="overview" className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-            <aside className="glass-panel rounded-[2rem] p-6 md:p-8">
+            <aside className="glass-panel content-lazy rounded-4xl p-6 md:p-8">
               <div className="space-y-6">
                 <div>
                   <p className="eyebrow">Daily overview</p>
-                  <h2 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-[var(--foreground)]">
+                  <h2 className="mt-2 text-3xl font-semibold tracking-[-0.06em] text-(--foreground)">
                     One calm place for the whole picture
                   </h2>
                 </div>
@@ -848,28 +878,30 @@ function App() {
                   remaining={totals.remaining}
                   className="mx-auto"
                 />
-                <div className="grid gap-3">
-                  <div className="rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
-                    <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                      Best shortcut
+                <div className="rounded-3xl border border-(--border-soft) bg-(--surface-subtle) p-4">
+                  <div className="grid gap-4 divide-y divide-(--border-soft)">
+                    <div className="pb-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
+                        Best shortcut
+                      </div>
+                      <div className="mt-2 text-lg font-semibold text-(--foreground)">
+                        Favorites + recents
+                      </div>
+                      <p className="mt-2 text-sm text-(--muted-foreground)">
+                        Save food once, then repeat it with almost no friction.
+                      </p>
                     </div>
-                    <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
-                      Favorites + recents
+                    <div className="pt-4">
+                      <div className="text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
+                        Reset flow
+                      </div>
+                      <div className="mt-2 text-lg font-semibold text-(--foreground)">
+                        Start fresh when you want
+                      </div>
+                      <p className="mt-2 text-sm text-(--muted-foreground)">
+                        The reset keeps preferences and favorites intact, so a new day never feels expensive.
+                      </p>
                     </div>
-                    <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-                      Save food once, then repeat it with almost no friction.
-                    </p>
-                  </div>
-                  <div className="rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--surface-subtle)] p-4">
-                    <div className="text-xs uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                      Reset flow
-                    </div>
-                    <div className="mt-2 text-lg font-semibold text-[var(--foreground)]">
-                      Start fresh when you want
-                    </div>
-                    <p className="mt-2 text-sm text-[var(--muted-foreground)]">
-                      The reset keeps preferences and favorites intact, so a new day never feels expensive.
-                    </p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -896,16 +928,16 @@ function App() {
             </div>
           </section>
 
-          <section id="open-source" className="grid gap-6">
-            <div className="glass-panel rounded-[2rem] p-6 md:p-8">
+          <section id="open-source" className="grid gap-6 content-lazy">
+            <div className="glass-panel rounded-4xl p-6 md:p-8">
               <div className="space-y-4">
                 <p className="eyebrow">Open source build notes</p>
                 <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                   <div className="max-w-2xl">
-                    <h2 className="text-3xl font-semibold tracking-[-0.06em] text-[var(--foreground)]">
+                    <h2 className="text-3xl font-semibold tracking-[-0.06em] text-(--foreground)">
                       A clean demo app designed to be forked, studied, and shipped.
                     </h2>
-                    <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
+                    <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
                       This project is intentionally front-end only, local-first, and GitHub Pages-friendly.
                       It keeps the architecture readable while still showing strong polish, motion,
                       and a reusable tracker state model.
@@ -921,8 +953,8 @@ function App() {
               </div>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
-              <article className="glass-panel overflow-hidden rounded-[2rem]">
+            <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
+              <article className="glass-panel overflow-hidden rounded-4xl">
                 <img
                   src="https://picsum.photos/seed/calorie-counter-bowl/800/600.webp"
                   alt="A placeholder healthy meal used for demo presentation."
@@ -931,53 +963,55 @@ function App() {
                 />
                 <div className="p-6">
                   <p className="eyebrow">Presentation ready</p>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
                     Screenshots, README polish, and a favicon set included.
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
+                  <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
                     The repo is meant to look good in public and be easy to understand for contributors or curious visitors.
                   </p>
                 </div>
               </article>
 
-              <article className="glass-panel rounded-[2rem] p-6">
-                <p className="eyebrow">Built for reuse</p>
-                <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
-                  Strong primitives, small state surface
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
-                  Type-safe tracker state, local JSON food data, and shadcn-friendly primitives make future iterations straightforward.
-                </p>
-              </article>
+              <div className="grid gap-6">
+                <article className="glass-panel rounded-4xl p-6">
+                  <p className="eyebrow">Built for reuse</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
+                    Strong primitives, small state surface
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
+                    Type-safe tracker state, local JSON food data, and shadcn-friendly primitives make future iterations straightforward.
+                  </p>
+                </article>
 
-              <article className="glass-panel rounded-[2rem] p-6">
-                <p className="eyebrow">Privacy-first</p>
-                <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-[var(--foreground)]">
-                  Your browser keeps the data
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-[var(--muted-foreground)]">
-                  No accounts, no sync pressure, no surprise server costs. Just a polished local tracker that loads fast and stays yours.
-                </p>
-              </article>
+                <article className="glass-panel rounded-4xl p-6">
+                  <p className="eyebrow">Privacy-first</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
+                    Your browser keeps the data
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
+                    No accounts, no sync pressure, no surprise server costs. Just a polished local tracker that loads fast and stays yours.
+                  </p>
+                </article>
+              </div>
             </div>
           </section>
         </main>
 
-        <footer className="border-t border-[var(--border-soft)] bg-[color:var(--surface-topbar)]/80 backdrop-blur-xl">
+        <footer className="border-t border-(--border-soft) bg-(--surface-topbar)/80 backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-8">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <LogoMark className="size-9" />
-                <span className="text-base font-semibold text-[var(--foreground)]">
-                  Calorie Counter
+                <span className="text-base font-semibold text-(--foreground)">
+                  NutraFlux
                 </span>
               </div>
-              <p className="text-sm text-[var(--muted-foreground)]">
+              <p className="text-sm text-(--muted-foreground)">
                 Built by a solo creator. English-only, MIT-licensed, ready for GitHub Pages.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 text-sm text-[var(--muted-foreground)]">
+            <div className="flex flex-wrap gap-3 text-sm text-(--muted-foreground)">
               <a className="footer-link" href="#tracker">
                 Tracker
               </a>
@@ -989,7 +1023,7 @@ function App() {
               </a>
               <a
                 className="footer-link"
-                href="https://github.com/johnnylemonny/Calorie-Counter"
+                href="https://github.com/johnnylemonny/NutraFlux"
                 target="_blank"
                 rel="noreferrer"
               >

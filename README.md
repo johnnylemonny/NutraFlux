@@ -1,111 +1,128 @@
-# Calorie Counter
+<p align="center">
+  <img src="public/nutraflux-banner.png" width="100%" alt="NutraFlux Banner">
+</p>
 
-A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing.
+<p align="center">
+  <img src="public/favicon.svg" width="120" height="120" alt="NutraFlux Logo">
+</p>
 
-## Why this project exists
+<h1 align="center">NutraFlux</h1>
 
-This project started as an implementation of the advanced `Calorie Counter` challenge from App Ideas, then expanded into a more refined demo product:
+<p align="center">
+  <strong>Fuel your nutritional momentum with precision.</strong><br>
+  A professional, local-first daily calorie and macro tracker built for speed, privacy, and technical excellence.
+</p>
 
-- Search foods from a local JSON dataset loaded at startup
-- Add foods into breakfast, lunch, dinner, and snacks
-- Track daily calorie target, consumed calories, and remaining budget
-- Save favorite foods and quickly re-add recent ones
-- Duplicate entries, reset the day, and load a sample day for demos
-- Switch between light, dark, and follow-system theme modes
+<p align="center">
+  <a href="https://github.com/johnnylemonny/NutraFlux/actions/workflows/deploy.yml"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/deploy.yml?branch=main&style=for-the-badge&logo=github&label=deploy&color=52B788" alt="Deploy status"></a>
+  <a href="https://github.com/johnnylemonny/NutraFlux/actions/workflows/super-linter.yml"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/super-linter.yml?branch=main&style=for-the-badge&logo=github&label=lint&color=52B788" alt="Lint status"></a>
+  <a href="https://github.com/johnnylemonny/NutraFlux/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/NutraFlux?style=for-the-badge&color=52B788" alt="License"></a>
+  <a href="https://johnnylemonny.github.io/NutraFlux/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
+</p>
 
-## Feature highlights
+---
 
-- `Search + Clear` search panel with wildcard support such as `chicken*`
-- Scrollable search results capped at 25 items with a `Show 25 more` action
-- Warning states for empty searches and no matching results
-- Local-first persistence with `localStorage`
-- English-only UI
-- Glassmorphism-inspired visual style with subtle motion
-- GitHub Pages-ready Vite configuration
+## 🌟 Overview
 
-## Tech stack
+**NutraFlux** is a high-performance nutritional tracking application designed for those who value speed and data privacy. It eliminates the friction of traditional trackers by offering an instant, search-first logging experience combined with a stunning glassmorphism interface.
 
-- Vite
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- shadcn-friendly UI primitives
-- Lucide icons
-- Sonner toasts
+Built with a **local-first** architecture, NutraFlux ensures your personal data never leaves your browser, providing a zero-latency experience that works entirely offline.
 
-## Local development
+## ✨ Features
 
-### Requirements
+- ⚡️ **Nutra-Speed Logging:** Instant search and log meals with a search-first interface.
+- 🔍 **Metri-Food Lookup:** Advanced full-text search with wildcard support over a compact local catalog.
+- 🥗 **Flux Categories:** Categorize entries into Breakfast, Lunch, Dinner, and Snacks with real-time feedback.
+- 📊 **Precision Momentum:** Professional progress indicators and calorie budgeting to visualize your intake.
+- ❤️ **Smart Memory:** Persistent favorites and recently used foods for one-tap tracking.
+- 🌓 **Technical Aesthetic:** State-of-the-art glassmorphism UI with Light, Dark, and System mode support.
+- 📱 **Adaptive Design:** Seamless performance across mobile, tablet, and desktop viewports.
 
-- Node.js 22+
-- pnpm 10+
+## ⚖️ License
 
-### Run locally
+NutraFlux is open-source software licensed under the **GNU Affero General Public License v3 (AGPL-3.0)**. This ensures that the application remains free for the community and that any modifications served over a network are contributed back. 
 
-```bash
-pnpm install
-pnpm dev
-```
+---
 
-### Validation
+## 🛠️ Tech Stack
 
-```bash
-pnpm lint
-pnpm typecheck
-pnpm build
-```
+NutraFlux leverages the latest frontend engineering standards:
 
-## Deploy to GitHub Pages
+- **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (OKLCH color system + backdrop-filter)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **UI Logic:** Custom high-resilience components with [Radix UI](https://www.radix-ui.com/) primitives
+- **Notifications:** [Sonner](https://sonner.stevenly.me/)
 
-This repo is configured for GitHub Pages with the repository base path:
+## 🚀 Getting Started
 
-`https://johnnylemonny.github.io/Calorie-Counter/`
+### Prerequisites
 
-Recommended setup:
+- **Node.js:** 22.0.0 or higher
+- **Package Manager:** [pnpm](https://pnpm.io/) 10+
 
-1. Push the repository to GitHub.
-2. In GitHub, enable `Pages` and choose `GitHub Actions` as the source.
-3. The included workflow will build and deploy the `dist` folder automatically on pushes to `main`.
+### Installation
 
-## Screenshots
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/johnnylemonny/NutraFlux.git
+   cd NutraFlux
+   ```
 
-Add screenshots or short GIFs after the first public release:
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-- hero and tracker overview
-- search results panel
-- dark mode
-- mobile layout
+3. Run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-## Project structure
+4. Build for production:
+   ```bash
+   pnpm build
+   ```
+
+## 🏗️ Project Structure
 
 ```text
 src/
-  components/
-  data/
-  hooks/
-  lib/
-  App.tsx
+├── components/   # Reusable UI components & Design System
+├── data/         # Food catalogs and presets
+├── hooks/        # Custom React hooks (tracker logic, theme)
+├── lib/          # Utilities, math logic, and helper functions
+├── types/        # TypeScript interfaces and types
+└── App.tsx       # Main application entry point
 ```
 
-## Inspiration and resources
+## 🔐 Privacy & Local-First
 
-- App Ideas: `Calorie Counter`
-- U.S. Department of Agriculture MyPyramid Food Raw Data
-- WebMD calorie counter example
+NutraFlux is strictly **local-first**. All nutritional data, settings, and food history are stored in your browser's `localStorage`. No trackers, no cookies, no cloud syncing—your health data belongs to you.
 
-The food catalog is generated locally from the `food_tables/` exports in this repository and stored as JSON for a lighter front-end-only experience. The import script accepts the My Foodapedia XML/XLSX tables included in the repo and converts them into the catalog the app reads at startup.
+## 🤝 Contributing
 
-## Roadmap ideas
+This is an open-source project and contributions are welcome! 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- Replace the curated food list with a transformed MyPyramid dataset
-- Add import/export of saved data
-- Add saved meal templates
-- Add trend views across multiple days
+---
 
-## Contributing
+<p align="center">
+  <i>Built with passion as part of a public open-source fitness ecosystem.</i>
+</p>
 
-Issues, suggestions, and pull requests are welcome. If you fork this project, keep the experience lightweight, clear, and useful.
-
-## License
-
-MIT
+<p align="center">
+<pre align="center">
+  _   _       _              ______ _             
+ | \ | |     | |            |  ____| |            
+ |  \| |_   _| |_ _ __ __ _ | |__  | |_   ___  __ 
+ | . ` | | | | __| '__/ _` ||  __| | | | | \ \/ / 
+ | |\  | |_| | |_| | | (_| || |    | | |_| |>  <  
+ |_| \_|\__,_|\__|_|  \__,_||_|    |_|\__,_/_/\_\ 
+</pre>
+</p>
