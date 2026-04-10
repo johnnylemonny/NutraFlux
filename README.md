@@ -37,6 +37,12 @@ Built with a **local-first** architecture, NutraFlux ensures your personal data 
 - 🌓 **Technical Aesthetic:** State-of-the-art glassmorphism UI with Light, Dark, and System mode support.
 - 📱 **Adaptive Design:** Seamless performance across mobile, tablet, and desktop viewports.
 
+## ⚖️ License
+
+NutraFlux is open-source software licensed under the **GNU Affero General Public License v3 (AGPL-3.0)**. This ensures that the application remains free for the community and that any modifications served over a network are contributed back. 
+
+---
+
 ## 🛠️ Tech Stack
 
 NutraFlux leverages the latest frontend engineering standards:
