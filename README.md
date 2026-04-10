@@ -1,52 +1,52 @@
 <p align="center">
-  <img src="public/macroflow-banner.png" width="100%" alt="MacroFlow Banner">
+  <img src="public/nutraflux-banner.png" width="100%" alt="NutraFlux Banner">
 </p>
 
 <p align="center">
-  <img src="public/favicon.svg" width="120" height="120" alt="MacroFlow Logo">
+  <img src="public/favicon.svg" width="120" height="120" alt="NutraFlux Logo">
 </p>
 
-<h1 align="center">MacroFlow</h1>
+<h1 align="center">NutraFlux</h1>
 
 <p align="center">
-  <strong>Build your daily nutritional momentum with ease.</strong><br>
-  A professional, local-first daily calorie tracker with a focus on speed, privacy, and visual excellence.
+  <strong>Fuel your nutritional momentum with precision.</strong><br>
+  A professional, local-first daily calorie and macro tracker built for speed, privacy, and technical excellence.
 </p>
 
 <p align="center">
-  <a href="https://github.com/johnnylemonny/macroflow/actions"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/macroflow/moderator.yml?branch=main&style=for-the-badge&logo=github&color=52B788" alt="Build Status"></a>
-  <a href="https://github.com/johnnylemonny/macroflow/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/macroflow?style=for-the-badge&color=52B788" alt="License"></a>
-  <a href="https://johnnylemonny.github.io/macroflow/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
+  <a href="https://github.com/johnnylemonny/nutraflux/actions"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/nutraflux/moderator.yml?branch=main&style=for-the-badge&logo=github&color=52B788" alt="Build Status"></a>
+  <a href="https://github.com/johnnylemonny/nutraflux/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/nutraflux?style=for-the-badge&color=52B788" alt="License"></a>
+  <a href="https://johnnylemonny.github.io/nutraflux/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
 </p>
 
 ---
 
 ## 🌟 Overview
 
-**MacroFlow** is designed for those who want to track their nutrition without the complexity of traditional "homework-like" apps. It provides a sleek, high-performance interface for logging meals, tracking calories, and maintaining a healthy pace throughout the day.
+**NutraFlux** is a high-performance nutritional tracking application designed for those who value speed and data privacy. It eliminates the friction of traditional trackers by offering an instant, search-first logging experience combined with a stunning glassmorphism interface.
 
-Built as a **local-first** application, your data stays in your browser's storage, ensuring maximum privacy and instant feedback without server latency.
+Built with a **local-first** architecture, NutraFlux ensures your personal data never leaves your browser, providing a zero-latency experience that works entirely offline.
 
 ## ✨ Features
 
-- ⚡️ **High-Speed Logging:** Search and log meals in seconds with a search-first approach.
-- 🔍 **Smart Food Lookup:** Full-text search with wildcard support (e.g., `chicken*` or `*salad`) over a local JSON catalog.
-- 🥗 **Meal Categorization:** Organize entries into Breakfast, Lunch, Dinner, and Snacks with dedicated summaries.
-- 📊 **Visual Momentum:** Real-time progress rings and calorie budgeting to keep you on track.
-- ❤️ **Favorites & Recents:** Save your common foods and quickly re-add recent entries with a single click.
-- 🌓 **Dynamic Theming:** Beautiful glassmorphism UI with support for Light, Dark, and System modes.
-- 📱 **Fully Responsive:** Optimised for both desktop and mobile screens.
+- ⚡️ **Nutra-Speed Logging:** Instant search and log meals with a search-first interface.
+- 🔍 **Metri-Food Lookup:** Advanced full-text search with wildcard support over a compact local catalog.
+- 🥗 **Flux Categories:** Categorize entries into Breakfast, Lunch, Dinner, and Snacks with real-time feedback.
+- 📊 **Precision Momentum:** Professional progress indicators and calorie budgeting to visualize your intake.
+- ❤️ **Smart Memory:** Persistent favorites and recently used foods for one-tap tracking.
+- 🌓 **Technical Aesthetic:** State-of-the-art glassmorphism UI with Light, Dark, and System mode support.
+- 📱 **Adaptive Design:** Seamless performance across mobile, tablet, and desktop viewports.
 
 ## 🛠️ Tech Stack
 
-MacroFlow is built with modern, cutting-edge technologies for optimal performance:
+NutraFlux leverages the latest frontend engineering standards:
 
 - **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
 - **Build Tool:** [Vite](https://vitejs.dev/)
-- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (using OKLCH colors & glassmorphism)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (OKLCH color system + backdrop-filter)
 - **Icons:** [Lucide React](https://lucide.dev/)
-- **UI Primitives:** Custom Sage-toned components loosely based on [shadcn/ui](https://ui.shadcn.com/)
-- **Toasts:** [Sonner](https://sonner.stevenly.me/)
+- **UI Logic:** Custom high-resilience components with [Radix UI](https://www.radix-ui.com/) primitives
+- **Notifications:** [Sonner](https://sonner.stevenly.me/)
 
 ## 🚀 Getting Started
 
@@ -59,8 +59,8 @@ MacroFlow is built with modern, cutting-edge technologies for optimal performanc
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/johnnylemonny/macroflow.git
-   cd macroflow
+   git clone https://github.com/johnnylemonny/nutraflux.git
+   cd nutraflux
    ```
 
 2. Install dependencies:
@@ -92,7 +92,7 @@ src/
 
 ## 🔐 Privacy & Local-First
 
-MacroFlow is **local-first**. All your calorie data, settings, and favorites are stored exclusively in your browser's `localStorage`. No data is sent to any server, making it 100% private and offline-capable once loaded.
+NutraFlux is strictly **local-first**. All nutritional data, settings, and food history are stored in your browser's `localStorage`. No trackers, no cookies, no cloud syncing—your health data belongs to you.
 
 ## 🤝 Contributing
 
@@ -116,13 +116,11 @@ Find more of my open-source work on [GitHub](https://github.com/johnnylemonny).
 
 <p align="center">
 <pre align="center">
- $$$$$$\  $$$$$$\  $$\  $$\ $$\  $$\ $$\  $$\ $$\  $$\ $$\  $$\       $$$$$$$$\  $$\  $$\  $$$$$$\  $$\  $$\ $$\  $$\ $$\  $$\        $$\ 
-\_$$  _|$$  __$$\ $$ |  $$ |$$$\  $$ |$$$\  $$ |\$$\  $$  / \$$\  /        $$  _____|$$ \  $$ |$$  __$$\ $$ \  $$ |$$$\  $$ |$$$\  $$ |       $$ | 
-  $$ |  $$ /  $$ |$$ |  $$ |$$$$ \ $$ |$$$$ \ $$ | \$$\ $$ /   \$$\ $$ /         $$ |      $$ \$$ |$$ /  $$ |$$ \$$ |$$$$ \ $$ |$$$$ \ $$ |       $$ | 
-  $$ |  $$ |  $$ |$$$$$$$$ |$$| \$$ $$ |$$| \$$ $$ |  \$$$$ /     \$$$$ /          $$$$$\    $$ \$$ |$$ |  $$ |$$ \$$ |$$| \$$ $$ |$$| \$$ $$ |       $$ | 
-  $$ |  $$ |  $$ |$$  __$$ |$$ | \$$$$ |$$ | \$$$$ |   \$$ /       \$$ /           $$  __|   $$ | \$$|$$ |  $$ |$$ | \$$|$$ | \$$$$ |$$ | \$$$$ |       \__| 
-  $$ |  $$ |  $$ |$$ |  $$ |$$ |  \$$$ |$$ |  \$$$ |    $$ |        $$ |            $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  \$$$ |$$ |  \$$$ |       $$\ 
-$$$$$$\  $$$$$$  |$$ |  $$ |$$ |   \$$ |$$ |   \$$ |    $$ |        $$ |            $$$$$$$$\ $$ |  $$ | $$$$$$  |$$ |  $$ |$$ |   \$$ |$$ |   \$$ |       $$ | 
-\______| \______/ \__|  \__|\__|    \__|\__|    \__|\__|        \__|            \________|\__|  \__| \______/ \__|  \__|\__|    \__|\__|    \__|\__|     \__| 
+  _   _       _              ______ _             
+ | \ | |     | |            |  ____| |            
+ |  \| |_   _| |_ _ __ __ _ | |__  | |_   ___  __ 
+ | . ` | | | | __| '__/ _` ||  __| | | | | \ \/ / 
+ | |\  | |_| | |_| | | (_| || |    | | |_| |>  <  
+ |_| \_|\__,_|\__|_|  \__,_||_|    |_|\__,_/_/\_\ 
 </pre>
 </p>

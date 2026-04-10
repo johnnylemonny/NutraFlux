@@ -291,7 +291,7 @@ function App() {
               <LogoMark className="size-11" />
               <div>
                 <div className="text-base font-semibold tracking-[-0.03em] text-(--foreground)">
-                  MacroFlow
+                  NutraFlux
                 </div>
                 <div className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                   local-first daily tracker
@@ -338,7 +338,7 @@ function App() {
                       Track calories without turning your day into homework.
                     </h1>
                     <p className="max-w-xl text-base leading-8 text-(--muted-foreground) md:text-lg">
-                      MacroFlow keeps the daily picture crisp: fast meal logging,
+                      NutraFlux keeps the daily picture crisp: fast meal logging,
                       clear remaining calories, search-first food lookup, and enough motion
                       to feel alive without getting in your way.
                     </p>
@@ -357,7 +357,7 @@ function App() {
                     <Sparkles className="size-4" />
                   </Button>
                   <Button asChild variant="ghost">
-                    <a href="https://github.com/johnnylemonny/macroflow" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/johnnylemonny/nutraflux" target="_blank" rel="noreferrer">
                       View source
                       <GitBranch className="size-4" />
                     </a>
@@ -1003,7 +1003,7 @@ function App() {
               <div className="flex items-center gap-3">
                 <LogoMark className="size-9" />
                 <span className="text-base font-semibold text-(--foreground)">
-                  Calorie Counter
+                  NutraFlux
                 </span>
               </div>
               <p className="text-sm text-(--muted-foreground)">
@@ -1023,7 +1023,7 @@ function App() {
               </a>
               <a
                 className="footer-link"
-                href="https://github.com/johnnylemonny/Calorie-Counter"
+                href="https://github.com/johnnylemonny/nutraflux"
                 target="_blank"
                 rel="noreferrer"
               >
