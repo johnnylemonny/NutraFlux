@@ -1,10 +1,10 @@
 # Calorie Counter
 
-A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing.
+A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing. Inspired by the advanced project idea from [App Ideas](https://github.com/florinpop17/app-ideas)
 
 ## Why this project exists
 
-This project started as an implementation of the advanced `Calorie Counter` challenge from App Ideas, then expanded into a more refined demo product:
+This project started as an implementation of `Calorie Counter` challenge, then expanded into a more refined demo product:
 
 - Search foods from a local JSON dataset loaded on first use
 - Add foods into breakfast, lunch, dinner, and snacks
@@ -26,9 +26,9 @@ This project started as an implementation of the advanced `Calorie Counter` chal
 ## Tech stack
 
 - Vite
-- React 19
+- React
 - TypeScript
-- Tailwind CSS 4
+- Tailwind CSS
 - shadcn-friendly UI primitives
 - Lucide icons
 - Sonner toasts
@@ -67,14 +67,8 @@ Recommended setup:
 2. In GitHub, enable `Pages` and choose `GitHub Actions` as the source.
 3. The included workflow will build and deploy the `dist` folder automatically on pushes to `main`.
 
-## Screenshots
+<!-- ## Screenshots -->
 
-Add screenshots or short GIFs after the first public release:
-
-- hero and tracker overview
-- search results panel
-- dark mode
-- mobile layout
 
 ## Project structure
 
