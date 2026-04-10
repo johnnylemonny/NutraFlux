@@ -291,7 +291,7 @@ function App() {
               <LogoMark className="size-11" />
               <div>
                 <div className="text-base font-semibold tracking-[-0.03em] text-(--foreground)">
-                  Calorie Counter
+                  MacroFlow
                 </div>
                 <div className="text-xs uppercase tracking-[0.22em] text-(--muted-foreground)">
                   local-first daily tracker
@@ -338,7 +338,7 @@ function App() {
                       Track calories without turning your day into homework.
                     </h1>
                     <p className="max-w-xl text-base leading-8 text-(--muted-foreground) md:text-lg">
-                      Calorie Counter keeps the daily picture crisp: fast meal logging,
+                      MacroFlow keeps the daily picture crisp: fast meal logging,
                       clear remaining calories, search-first food lookup, and enough motion
                       to feel alive without getting in your way.
                     </p>
@@ -357,7 +357,7 @@ function App() {
                     <Sparkles className="size-4" />
                   </Button>
                   <Button asChild variant="ghost">
-                    <a href="https://github.com/johnnylemonny/Calorie-Counter" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/johnnylemonny/macroflow" target="_blank" rel="noreferrer">
                       View source
                       <GitBranch className="size-4" />
                     </a>
