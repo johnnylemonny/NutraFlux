@@ -357,7 +357,7 @@ function App() {
                     <Sparkles className="size-4" />
                   </Button>
                   <Button asChild variant="ghost">
-                    <a href="https://github.com/johnnylemonny/nutraflux" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/johnnylemonny/NutraFlux" target="_blank" rel="noreferrer">
                       View source
                       <GitBranch className="size-4" />
                     </a>
@@ -1023,7 +1023,7 @@ function App() {
               </a>
               <a
                 className="footer-link"
-                href="https://github.com/johnnylemonny/nutraflux"
+                href="https://github.com/johnnylemonny/NutraFlux"
                 target="_blank"
                 rel="noreferrer"
               >
