@@ -14,9 +14,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/johnnylemonny/nutraflux/actions"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/nutraflux/moderator.yml?branch=main&style=for-the-badge&logo=github&color=52B788" alt="Build Status"></a>
-  <a href="https://github.com/johnnylemonny/nutraflux/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/nutraflux?style=for-the-badge&color=52B788" alt="License"></a>
-  <a href="https://johnnylemonny.github.io/nutraflux/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
+  <a href="https://github.com/johnnylemonny/NutraFlux/actions/workflows/deploy.yml"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/deploy.yml?branch=main&style=for-the-badge&logo=github&label=deploy&color=52B788" alt="Deploy status"></a>
+  <a href="https://github.com/johnnylemonny/NutraFlux/actions/workflows/super-linter.yml"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/super-linter.yml?branch=main&style=for-the-badge&logo=github&label=lint&color=52B788" alt="Lint status"></a>
+  <a href="https://github.com/johnnylemonny/NutraFlux/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/NutraFlux?style=for-the-badge&color=52B788" alt="License"></a>
+  <a href="https://johnnylemonny.github.io/NutraFlux/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
 </p>
 
 ---
@@ -65,8 +66,8 @@ NutraFlux leverages the latest frontend engineering standards:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/johnnylemonny/nutraflux.git
-   cd nutraflux
+   git clone https://github.com/johnnylemonny/NutraFlux.git
+   cd NutraFlux
    ```
 
 2. Install dependencies:
@@ -108,11 +109,6 @@ This is an open-source project and contributions are welcome!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## 👤 Author
-
-**johnnylemonny**  
-Find more of my open-source work on [GitHub](https://github.com/johnnylemonny).
 
 ---
 

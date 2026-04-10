@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
     "preview": "vite preview"
   },
-  "homepage": "https://johnnylemonny.github.io/nutraflux/",
+  "homepage": "https://johnnylemonny.github.io/NutraFlux/",
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",
     "@radix-ui/react-dialog": "^1.1.15",
