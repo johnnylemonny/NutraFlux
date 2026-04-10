@@ -1,111 +1,128 @@
-# Calorie Counter
+<p align="center">
+  <img src="public/macroflow-banner.png" width="100%" alt="MacroFlow Banner">
+</p>
 
-A friendly, open-source calorie tracker built as a polished demo app. It combines a clean daily tracking flow with a local-first food search experience, fast logging, favorites, recent foods, and a lightweight visual system designed for public GitHub sharing.
+<p align="center">
+  <img src="public/favicon.svg" width="120" height="120" alt="MacroFlow Logo">
+</p>
 
-## Why this project exists
+<h1 align="center">MacroFlow</h1>
 
-This project started as an implementation of the advanced `Calorie Counter` challenge from App Ideas, then expanded into a more refined demo product:
+<p align="center">
+  <strong>Build your daily nutritional momentum with ease.</strong><br>
+  A professional, local-first daily calorie tracker with a focus on speed, privacy, and visual excellence.
+</p>
 
-- Search foods from a local JSON dataset loaded on first use
-- Add foods into breakfast, lunch, dinner, and snacks
-- Track daily calorie target, consumed calories, and remaining budget
-- Save favorite foods and quickly re-add recent ones
-- Duplicate entries, reset the day, and load a sample day for demos
-- Switch between light, dark, and follow-system theme modes
+<p align="center">
+  <a href="https://github.com/johnnylemonny/macroflow/actions"><img src="https://img.shields.io/github/actions/workflow/status/johnnylemonny/macroflow/moderator.yml?branch=main&style=for-the-badge&logo=github&color=52B788" alt="Build Status"></a>
+  <a href="https://github.com/johnnylemonny/macroflow/blob/main/LICENSE"><img src="https://img.shields.io/github/license/johnnylemonny/macroflow?style=for-the-badge&color=52B788" alt="License"></a>
+  <a href="https://johnnylemonny.github.io/macroflow/"><img src="https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge" alt="Live Demo"></a>
+</p>
 
-## Feature highlights
+---
 
-- `Search + Clear` search panel with wildcard support such as `chicken*`
-- Scrollable search results capped at 25 items with a `Show 25 more` action
-- Warning states for empty searches and no matching results
-- Local-first persistence with `localStorage`
-- English-only UI
-- Glassmorphism-inspired visual style with subtle motion
-- GitHub Pages-ready Vite configuration
+## 🌟 Overview
 
-## Tech stack
+**MacroFlow** is designed for those who want to track their nutrition without the complexity of traditional "homework-like" apps. It provides a sleek, high-performance interface for logging meals, tracking calories, and maintaining a healthy pace throughout the day.
 
-- Vite
-- React 19
-- TypeScript
-- Tailwind CSS 4
-- shadcn-friendly UI primitives
-- Lucide icons
-- Sonner toasts
+Built as a **local-first** application, your data stays in your browser's storage, ensuring maximum privacy and instant feedback without server latency.
 
-## Local development
+## ✨ Features
 
-### Requirements
+- ⚡️ **High-Speed Logging:** Search and log meals in seconds with a search-first approach.
+- 🔍 **Smart Food Lookup:** Full-text search with wildcard support (e.g., `chicken*` or `*salad`) over a local JSON catalog.
+- 🥗 **Meal Categorization:** Organize entries into Breakfast, Lunch, Dinner, and Snacks with dedicated summaries.
+- 📊 **Visual Momentum:** Real-time progress rings and calorie budgeting to keep you on track.
+- ❤️ **Favorites & Recents:** Save your common foods and quickly re-add recent entries with a single click.
+- 🌓 **Dynamic Theming:** Beautiful glassmorphism UI with support for Light, Dark, and System modes.
+- 📱 **Fully Responsive:** Optimised for both desktop and mobile screens.
 
-- Node.js 22+
-- pnpm 10+
+## 🛠️ Tech Stack
 
-### Run locally
+MacroFlow is built with modern, cutting-edge technologies for optimal performance:
 
-```bash
-pnpm install
-pnpm dev
-```
+- **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (using OKLCH colors & glassmorphism)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **UI Primitives:** Custom Sage-toned components loosely based on [shadcn/ui](https://ui.shadcn.com/)
+- **Toasts:** [Sonner](https://sonner.stevenly.me/)
 
-### Validation
+## 🚀 Getting Started
 
-```bash
-pnpm lint
-pnpm typecheck
-pnpm build
-```
+### Prerequisites
 
-## Deploy to GitHub Pages
+- **Node.js:** 22.0.0 or higher
+- **Package Manager:** [pnpm](https://pnpm.io/) 10+
 
-This repo is configured for GitHub Pages with the repository base path:
+### Installation
 
-`https://johnnylemonny.github.io/Calorie-Counter/`
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/johnnylemonny/macroflow.git
+   cd macroflow
+   ```
 
-Recommended setup:
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-1. Push the repository to GitHub.
-2. In GitHub, enable `Pages` and choose `GitHub Actions` as the source.
-3. The included workflow will build and deploy the `dist` folder automatically on pushes to `main`.
+3. Run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-## Screenshots
+4. Build for production:
+   ```bash
+   pnpm build
+   ```
 
-Add screenshots or short GIFs after the first public release:
-
-- hero and tracker overview
-- search results panel
-- dark mode
-- mobile layout
-
-## Project structure
+## 🏗️ Project Structure
 
 ```text
 src/
-  components/
-  data/
-  hooks/
-  lib/
-  App.tsx
+├── components/   # Reusable UI components & Design System
+├── data/         # Food catalogs and presets
+├── hooks/        # Custom React hooks (tracker logic, theme)
+├── lib/          # Utilities, math logic, and helper functions
+├── types/        # TypeScript interfaces and types
+└── App.tsx       # Main application entry point
 ```
 
-## Inspiration and resources
+## 🔐 Privacy & Local-First
 
-- App Ideas: `Calorie Counter`
-- U.S. Department of Agriculture MyPyramid Food Raw Data
-- WebMD calorie counter example
+MacroFlow is **local-first**. All your calorie data, settings, and favorites are stored exclusively in your browser's `localStorage`. No data is sent to any server, making it 100% private and offline-capable once loaded.
 
-The food catalog is generated locally from the `food_tables/` exports in this repository and stored as JSON for a lighter front-end-only experience. The import script accepts the My Foodapedia XML/XLSX tables included in the repo and converts them into the catalog the app reads when the search flow is used.
+## 🤝 Contributing
 
-## Roadmap ideas
+This is an open-source project and contributions are welcome! 
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-- Replace the curated food list with a transformed MyPyramid dataset
-- Add import/export of saved data
-- Add saved meal templates
-- Add trend views across multiple days
+## 👤 Author
 
-## Contributing
+**johnnylemonny**  
+Find more of my open-source work on [GitHub](https://github.com/johnnylemonny).
 
-Issues, suggestions, and pull requests are welcome. If you fork this project, keep the experience lightweight, clear, and useful.
+---
 
-## License
+<p align="center">
+  <i>Built with passion as part of a public open-source fitness ecosystem.</i>
+</p>
 
-MIT
+<p align="center">
+<pre align="center">
+ $$$$$$\  $$$$$$\  $$\  $$\ $$\  $$\ $$\  $$\ $$\  $$\ $$\  $$\       $$$$$$$$\  $$\  $$\  $$$$$$\  $$\  $$\ $$\  $$\ $$\  $$\        $$\ 
+\_$$  _|$$  __$$\ $$ |  $$ |$$$\  $$ |$$$\  $$ |\$$\  $$  / \$$\  /        $$  _____|$$ \  $$ |$$  __$$\ $$ \  $$ |$$$\  $$ |$$$\  $$ |       $$ | 
+  $$ |  $$ /  $$ |$$ |  $$ |$$$$ \ $$ |$$$$ \ $$ | \$$\ $$ /   \$$\ $$ /         $$ |      $$ \$$ |$$ /  $$ |$$ \$$ |$$$$ \ $$ |$$$$ \ $$ |       $$ | 
+  $$ |  $$ |  $$ |$$$$$$$$ |$$| \$$ $$ |$$| \$$ $$ |  \$$$$ /     \$$$$ /          $$$$$\    $$ \$$ |$$ |  $$ |$$ \$$ |$$| \$$ $$ |$$| \$$ $$ |       $$ | 
+  $$ |  $$ |  $$ |$$  __$$ |$$ | \$$$$ |$$ | \$$$$ |   \$$ /       \$$ /           $$  __|   $$ | \$$|$$ |  $$ |$$ | \$$|$$ | \$$$$ |$$ | \$$$$ |       \__| 
+  $$ |  $$ |  $$ |$$ |  $$ |$$ |  \$$$ |$$ |  \$$$ |    $$ |        $$ |            $$ |      $$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  \$$$ |$$ |  \$$$ |       $$\ 
+$$$$$$\  $$$$$$  |$$ |  $$ |$$ |   \$$ |$$ |   \$$ |    $$ |        $$ |            $$$$$$$$\ $$ |  $$ | $$$$$$  |$$ |  $$ |$$ |   \$$ |$$ |   \$$ |       $$ | 
+\______| \______/ \__|  \__|\__|    \__|\__|    \__|\__|        \__|            \________|\__|  \__| \______/ \__|  \__|\__|    \__|\__|    \__|\__|     \__| 
+</pre>
+</p>
