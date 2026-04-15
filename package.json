@@ -14,6 +14,10 @@
     "preview": "vite preview"
   },
   "homepage": "https://johnnylemonny.github.io/NutraFlux/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnnylemonny/NutraFlux.git"
+  },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.2.8",
     "@radix-ui/react-dialog": "^1.1.15",
