@@ -969,7 +969,7 @@ function App() {
             <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
               <article className="card-panel overflow-hidden rounded-4xl">
                 <img
-                  src="/calorie-bowl.jpg"
+                  src={`${import.meta.env.BASE_URL}calorie-bowl.jpg`}
                   alt="A delicious, healthy bowl with fresh vegetables, avocado, and protein representing clean eating."
                   loading="lazy"
                   className="h-56 w-full object-cover"
