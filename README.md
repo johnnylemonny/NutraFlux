@@ -38,7 +38,7 @@
 
 ## 🌟 Overview
 
-**NutraFlux** is a high-performance nutritional tracking application designed for power users who value both their time and their data privacy. It eliminates the friction of traditional trackers by offering an **instant, search-first logging experience** combined with a stunning glassmorphism interface.
+**NutraFlux** is a high-performance nutritional tracking application designed for power users who value both their time and their data privacy. It eliminates the friction of traditional trackers by offering an **instant, search-first logging experience** combined with a stunning solid-elevated typography-driven interface.
 
 Unlike many modern trackers that rely on slow API calls and invasive data-sharing, NutraFlux is built with a **local-first** architecture. Your personal data never leaves your browser, ensuring zero-latency interactions and 100% offline capability.
 
@@ -53,7 +53,7 @@ Unlike many modern trackers that rely on slow API calls and invasive data-sharin
 | 🥗 **Flux Categories** | Smart categorization into Breakfast, Lunch, Dinner, and Snacks. |
 | 📊 **Precision Momentum** | Real-time progress indicators and calorie budgeting visualizations. |
 | ❤️ **Smart Memory** | One-tap logging for favorites and recently used foods. |
-| 🌒 **Technical Aesthetic** | State-of-the-art glassmorphism UI with native Light/Dark/System support. |
+| 🌒 **Technical Aesthetic** | State-of-the-art solid elevated UI with native Light/Dark/System support. |
 | 📱 **Adaptive Design** | Optimized for mobile-first workflows without sacrificing desktop power. |
 
 ---
@@ -65,8 +65,8 @@ NutraFlux is engineered using the most resilient modern frontend standards:
 - **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
 - **Framework:** [Vite](https://vitejs.dev/) for ultra-fast HMR and optimized builds
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (Leveraging OKLCH color space & container queries)
-- **Design System:** [Radix UI](https://www.radix-ui.com/) primitives + custom glassmorphic components
-- **Experience:** [Lucide React](https://lucide.dev/) for iconography & [Sonner](https://sonner.stevenly.me/) for toast management
+- **Design System:** [Radix UI](https://www.radix-ui.com/) primitives + custom solid elevated components
+- **Experience:** [Lucide React](https://lucide.dev/) for iconography & [React-Toastify](https://github.com/fkhadra/react-toastify) for toast management
 
 ---
 
@@ -147,7 +147,15 @@ Distributed under the **GNU Affero General Public License v3 (AGPL-3.0)**. See `
 
 - Inspired by the [App Ideas](https://github.com/florinpop17/app-ideas) community.
 - Icons by [Lucide](https://lucide.dev/).
-- Design inspiration from various glassmorphism case studies.
+- Design inspiration from modern typography-driven interfaces.
+
+---
+
+## 🤖 AI Agents & Developer Tooling
+
+This repository is optimized for development with AI coding agents:
+- **[AGENTS.md](AGENTS.md)**: A context file outlining codebase structure, tech stack, rules, and workflows to help AI agents ramp up instantly.
+- **[Graphify](https://github.com/safishamsi/graphify)**: Fully mapped using Graphify. You can view the generated codebase graph in [graphify-out/graph.html](graphify-out/graph.html) and check the comprehensive structural report in [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md).
 
 ---
 

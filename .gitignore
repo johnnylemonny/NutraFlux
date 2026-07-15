@@ -33,3 +33,7 @@ pnpm-lock.yaml.bak
 *.njsproj
 *.sln
 *.sw?
+
+# Graphify
+graphify-out/
+

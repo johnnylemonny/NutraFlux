@@ -13,7 +13,8 @@ import {
   Star,
   X,
 } from 'lucide-react'
-import { Toaster, toast } from 'sonner'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import { LogoMark } from '@/components/logo-mark'
 import { MealCard } from '@/components/meal-card'
@@ -148,15 +149,11 @@ function App() {
   const selectedFood =
     foodCatalog.find((food) => food.id === selectedFoodId) ?? visibleFoodResults[0] ?? null
 
-  useEffect(() => {
-    setSelectedFoodId((current) => {
-      if (current && foodCatalog.some((food) => food.id === current)) {
-        return current
-      }
-
-      return foodCatalog[0]?.id ?? null
-    })
-  }, [foodCatalog])
+  // Adjust selectedFoodId if the currently selected food is no longer in the catalog
+  const hasSelectedFood = selectedFoodId && foodCatalog.some((food) => food.id === selectedFoodId)
+  if (!hasSelectedFood && foodCatalog.length > 0) {
+    setSelectedFoodId(foodCatalog[0].id)
+  }
 
   useEffect(() => {
     if (!lastAddedEntryId) {
@@ -206,18 +203,24 @@ function App() {
       food: createFoodSnapshot(selectedFood),
     })
 
-    toast.success(`${entry.food.name} added`, {
-      description: `${entry.totalCalories} kcal in ${mealMeta[selectedMeal].label.toLowerCase()}.`,
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">{entry.food.name} added</div>
+        <div className="text-xs opacity-90">{entry.totalCalories} kcal in {mealMeta[selectedMeal].label.toLowerCase()}.</div>
+      </div>
+    )
 
     startTransition(() => setServings(1))
   }
 
   const handleAddRecentFood = (food: FoodSnapshot) => {
     const entry = addEntry({ meal: selectedMeal, quantity: 1, food })
-    toast.success(`${entry.food.name} added again`, {
-      description: `Quick add dropped it into ${mealMeta[selectedMeal].label.toLowerCase()}.`,
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">{entry.food.name} added again</div>
+        <div className="text-xs opacity-90 font-medium">Quick add dropped it into {mealMeta[selectedMeal].label.toLowerCase()}.</div>
+      </div>
+    )
   }
 
   const handleAddCustomFood = () => {
@@ -225,9 +228,12 @@ function App() {
     const parsedCalories = Number(customCalories)
 
     if (!safeName || Number.isNaN(parsedCalories) || parsedCalories <= 0) {
-      toast.error('Add a valid custom item', {
-        description: 'A name and calories per serving are both required.',
-      })
+      toast.error(
+        <div>
+          <div className="font-semibold">Add a valid custom item</div>
+          <div className="text-xs opacity-90 font-medium">A name and calories per serving are both required.</div>
+        </div>
+      )
       return
     }
 
@@ -241,9 +247,12 @@ function App() {
       },
     })
 
-    toast.success('Custom item added', {
-      description: `${entry.totalCalories} kcal saved to your day.`,
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">Custom item added</div>
+        <div className="text-xs opacity-90 font-medium">{entry.totalCalories} kcal saved to your day.</div>
+      </div>
+    )
 
     startTransition(() => {
       setCustomName('')
@@ -260,32 +269,38 @@ function App() {
       food: entry.food,
     })
 
-    toast.success('Item duplicated', {
-      description: `${duplicated.food.name} was added one more time.`,
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">Item duplicated</div>
+        <div className="text-xs opacity-90 font-medium">{duplicated.food.name} was added one more time.</div>
+      </div>
+    )
   }
 
   const handleResetDay = () => {
     resetDay()
-    toast.success('Fresh day ready', {
-      description: 'Your entries were cleared without touching favorites or theme.',
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">Fresh day ready</div>
+        <div className="text-xs opacity-90 font-medium">Your entries were cleared without touching favorites or theme.</div>
+      </div>
+    )
   }
 
   const handleLoadDemo = () => {
     loadDemoDay()
-    toast.success('Sample day loaded', {
-      description: 'A balanced example is ready for browsing and screenshots.',
-    })
+    toast.success(
+      <div>
+        <div className="font-semibold">Sample day loaded</div>
+        <div className="text-xs opacity-90 font-medium">A balanced example is ready for browsing.</div>
+      </div>
+    )
   }
 
   return (
     <>
       <div className="relative isolate overflow-hidden">
-        <div className="hero-blur hero-blur-one" />
-        <div className="hero-blur hero-blur-two" />
-
-        <header className="sticky top-0 z-40 border-b border-(--border-soft) bg-(--surface-topbar)/85 backdrop-blur-xl">
+        <header className="sticky top-0 z-40 border-b border-(--border-soft) bg-(--surface-topbar)">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-4 md:px-8">
             <a href="#top" className="flex items-center gap-3">
               <LogoMark className="size-11" />
@@ -328,8 +343,7 @@ function App() {
 
         <main id="top" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-5 pb-16 pt-8 md:px-8 md:pb-24 md:pt-12">
           <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="glass-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.55),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(82,183,136,0.16),transparent_36%)]" />
+            <div className="card-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
               <div className="relative flex flex-col gap-8">
                 <div className="space-y-5">
                   <p className="eyebrow">Friendly. Useful. Open source.</p>
@@ -383,7 +397,7 @@ function App() {
               </div>
             </div>
 
-            <aside className="glass-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
+            <aside className="card-panel relative overflow-hidden rounded-4xl p-6 md:p-8">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(82,183,136,0.1),transparent_52%)]" />
               <div className="relative flex h-full flex-col gap-6">
                 <div className="flex items-center justify-between">
@@ -455,7 +469,7 @@ function App() {
             </aside>
           </section>
           <section id="tracker" className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-            <aside className="glass-panel content-lazy rounded-4xl p-6 md:p-8">
+            <aside className="card-panel content-lazy rounded-4xl p-6 md:p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <p className="eyebrow">Tracker setup</p>
@@ -560,7 +574,7 @@ function App() {
               </div>
             </aside>
 
-            <div className="glass-panel rounded-4xl p-6 md:p-8">
+            <div className="card-panel rounded-4xl p-6 md:p-8">
               <div className="grid gap-6">
                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                   <div>
@@ -864,7 +878,7 @@ function App() {
           </section>
 
           <section id="overview" className="grid gap-6 lg:grid-cols-[0.7fr_1.3fr]">
-            <aside className="glass-panel content-lazy rounded-4xl p-6 md:p-8">
+            <aside className="card-panel content-lazy rounded-4xl p-6 md:p-8">
               <div className="space-y-6">
                 <div>
                   <p className="eyebrow">Daily overview</p>
@@ -929,22 +943,21 @@ function App() {
           </section>
 
           <section id="open-source" className="grid gap-6 content-lazy">
-            <div className="glass-panel rounded-4xl p-6 md:p-8">
+            <div className="card-panel rounded-4xl p-6 md:p-8">
               <div className="space-y-4">
-                <p className="eyebrow">Open source build notes</p>
+                <p className="eyebrow">Fully Open & Transparent</p>
                 <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                   <div className="max-w-2xl">
                     <h2 className="text-3xl font-semibold tracking-[-0.06em] text-(--foreground)">
-                      A clean demo app designed to be forked, studied, and shipped.
+                      Fully transparent, private, and customizable health tooling.
                     </h2>
                     <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
-                      This project is intentionally front-end only, local-first, and GitHub Pages-friendly.
-                      It keeps the architecture readable while still showing strong polish, motion,
-                      and a reusable tracker state model.
+                      NutraFlux is built on open-source values. It runs entirely on your device,
+                      without requiring external accounts, subscriptions, or cloud synchronization.
                     </p>
                   </div>
                   <Button asChild variant="secondary">
-                    <a href="https://github.com/johnnylemonny/Calorie-Counter" target="_blank" rel="noreferrer">
+                    <a href="https://github.com/johnnylemonny/NutraFlux" target="_blank" rel="noreferrer">
                       GitHub repository
                       <ArrowUpRight className="size-4" />
                     </a>
@@ -954,36 +967,36 @@ function App() {
             </div>
 
             <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
-              <article className="glass-panel overflow-hidden rounded-4xl">
+              <article className="card-panel overflow-hidden rounded-4xl">
                 <img
-                  src="https://picsum.photos/seed/calorie-counter-bowl/800/600.webp"
-                  alt="A placeholder healthy meal used for demo presentation."
+                  src="/calorie-bowl.jpg"
+                  alt="A delicious, healthy bowl with fresh vegetables, avocado, and protein representing clean eating."
                   loading="lazy"
                   className="h-56 w-full object-cover"
                 />
                 <div className="p-6">
-                  <p className="eyebrow">Presentation ready</p>
+                  <p className="eyebrow">Modern & clean</p>
                   <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
-                    Screenshots, README polish, and a favicon set included.
+                    Modern typography-centric interface with custom theme options.
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
-                    The repo is meant to look good in public and be easy to understand for contributors or curious visitors.
+                    Enjoy a premium, distraction-free UI optimized for speed, clarity, and daily utility.
                   </p>
                 </div>
               </article>
 
               <div className="grid gap-6">
-                <article className="glass-panel rounded-4xl p-6">
-                  <p className="eyebrow">Built for reuse</p>
+                <article className="card-panel rounded-4xl p-6">
+                  <p className="eyebrow">Daily Utility</p>
                   <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
-                    Strong primitives, small state surface
+                    Fast calorie math and instant lookup
                   </h3>
                   <p className="mt-3 text-sm leading-7 text-(--muted-foreground)">
-                    Type-safe tracker state, local JSON food data, and shadcn-friendly primitives make future iterations straightforward.
+                    Compact local databases and advanced search queries make adding meals extremely fast and frictionless.
                   </p>
                 </article>
 
-                <article className="glass-panel rounded-4xl p-6">
+                <article className="card-panel rounded-4xl p-6">
                   <p className="eyebrow">Privacy-first</p>
                   <h3 className="mt-2 text-2xl font-semibold tracking-[-0.05em] text-(--foreground)">
                     Your browser keeps the data
@@ -997,7 +1010,7 @@ function App() {
           </section>
         </main>
 
-        <footer className="border-t border-(--border-soft) bg-(--surface-topbar)/80 backdrop-blur-xl">
+        <footer className="border-t border-(--border-soft) bg-(--surface-topbar)">
           <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-8">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
@@ -1007,7 +1020,7 @@ function App() {
                 </span>
               </div>
               <p className="text-sm text-(--muted-foreground)">
-                Built by a solo creator. English-only, MIT-licensed, ready for GitHub Pages.
+                Built by johnnylemonny. English-only, AGPL-3.0 licensed, ready for GitHub Pages.
               </p>
             </div>
 
@@ -1034,10 +1047,16 @@ function App() {
         </footer>
       </div>
 
-      <Toaster
-        richColors
-        closeButton
+      <ToastContainer
         position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
         theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
       />
     </>

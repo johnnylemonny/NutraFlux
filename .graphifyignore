@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.git/
+.github/
+graphify-out/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+dev-server.err.log
+dev-server.out.log
+.eslintcache
+.vscode/
+.idea/
+.agents/
+AGENTS.md
+README.md

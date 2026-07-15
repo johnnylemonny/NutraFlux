@@ -67,10 +67,7 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  background:
-    radial-gradient(circle at top left, color-mix(in oklab, var(--tone-soft) 80%, transparent) 0, transparent 42%),
-    radial-gradient(circle at 85% 12%, color-mix(in oklab, var(--warning) 16%, transparent) 0, transparent 28%),
-    linear-gradient(180deg, color-mix(in oklab, var(--background) 88%, white 12%), var(--background));
+  background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
 }
@@ -104,19 +101,11 @@ img {
   min-height: 100vh;
 }
 
-.glass-panel {
+.card-panel {
   border: 1px solid var(--border-soft);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.28)),
-    var(--surface-elevated);
+  background-color: var(--surface-elevated);
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(20px);
-}
-
-.dark .glass-panel {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-    var(--surface-elevated);
+  border-radius: 2rem;
 }
 
 .eyebrow {
@@ -126,30 +115,6 @@ img {
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--tone-strong);
-}
-
-.hero-blur {
-  position: absolute;
-  z-index: -1;
-  filter: blur(80px);
-  border-radius: 999px;
-  opacity: 0.75;
-}
-
-.hero-blur-one {
-  top: 4rem;
-  left: -2rem;
-  width: 18rem;
-  height: 18rem;
-  background: color-mix(in oklab, var(--tone-strong) 38%, white 62%);
-}
-
-.hero-blur-two {
-  top: 18rem;
-  right: -4rem;
-  width: 16rem;
-  height: 16rem;
-  background: color-mix(in oklab, var(--warning) 32%, transparent);
 }
 
 .footer-link {

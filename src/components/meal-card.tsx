@@ -20,7 +20,7 @@ export function MealCard({
   return (
     <section
       className={cn(
-        'glass-panel content-lazy meal-panel flex flex-col gap-5 rounded-4xl p-6',
+        'card-panel content-lazy meal-panel flex flex-col gap-5 rounded-4xl p-6',
         mealToneClass,
       )}
       aria-labelledby={`meal-${summary.key}`}
