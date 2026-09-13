@@ -22,14 +22,14 @@ NutraFlux is a local-first daily calorie tracker built with React, TypeScript, T
   - `meal-card.tsx` - Display for specific meal entries with options to delete/duplicate
   - `progress-ring.tsx` - Visual circular calorie indicator
   - `theme-toggle.tsx` - Smooth switch between light and dark modes
-  - `ui/` - Reusable primitives (buttons, inputs, separators, sliders)
+  - `ui/` - Reusable primitives (buttons, inputs, separators, sliders, dialogs, tooltips)
 - `src/data/` - Static JSON databases and data helpers:
   - `foods.ts` - Food catalog, target presets, categories, meal hints
 - `src/hooks/` - Core custom React hooks:
-  - `use-calorie-tracker.ts` - State management hook (loads/saves to localStorage)
+  - `use-calorie-tracker.ts` - State management hook (loads/saves to localStorage with safe memory fallback)
   - `use-theme.ts` - System/user theme synchronization hook
 - `src/lib/` - Helper libraries:
-  - `tracker.ts` - Calorie math, macro formatting, snapshot generation
+  - `tracker.ts` - Calorie math, macro formatting, snapshot and text summary generation
   - `utils.ts` - Classname merging utilities (`cn`)
 - `src/types.ts` - TypeScript interface and type definitions
 
@@ -40,6 +40,6 @@ NutraFlux is a local-first daily calorie tracker built with React, TypeScript, T
 - **Language Policy:** Code, commits, README, and comments must be in English. User-facing chat and logs in Polish.
 
 ## Development Workflows
-- **Dependency Management:** Use `pnpm` only. Always run `pnpm typecheck` and `pnpm lint` before completing tasks.
+- **Dependency Management:** Use `pnpm` only. Always run `pnpm test`, `pnpm typecheck` and `pnpm lint` before completing tasks.
 - **Local Dev Server:** Start the server with `pnpm run dev`.
 - **Git Policy:** Work on feature branches. Do not push to remote directly without explicit user request.

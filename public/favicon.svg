@@ -21,7 +21,7 @@
     </filter>
   </defs>
 
-  {/* Outer Ring */}
+  <!-- Outer Ring -->
   <circle
     cx="32"
     cy="32"
@@ -31,7 +31,7 @@
     opacity="0.1"
   />
 
-  {/* Active Flux Path */}
+  <!-- Active Flux Path -->
   <path
     d="M32 4C39.4239 4 46.5436 6.95001 51.799 12.2054C57.0544 17.4607 60.0044 24.5804 60.0044 32.0044C60.0044 39.4284 57.0544 46.548 51.799 51.8034"
     stroke="url(#nutraflux-gradient-favicon)"
@@ -39,7 +39,7 @@
     strokeLinecap="round"
   />
 
-  {/* Styled 'N' */}
+  <!-- Styled 'N' -->
   <path
     d="M20 44V20L44 44V20"
     stroke="url(#nutraflux-gradient-favicon)"

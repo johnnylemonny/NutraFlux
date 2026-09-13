@@ -51,10 +51,12 @@ Unlike many modern trackers that rely on slow API calls and invasive data-sharin
 | ⚡ **Nutra-Speed Logging** | Instant, search-first interface for logging meals in seconds. |
 | 🔍 **Metri-Food Lookup** | Advanced full-text search with wildcard support over a compact local catalog. |
 | 🥗 **Flux Categories** | Smart categorization into Breakfast, Lunch, Dinner, and Snacks. |
-| 📊 **Precision Momentum** | Real-time progress indicators and calorie budgeting visualizations. |
+| 📊 **Precision Momentum** | Real-time progress indicators, calorie budgeting, and macro breakdowns. |
+| 🗑️ **Granular Entry Control** | Duplicate or delete individual entries with instant feedback and safe reset dialogs. |
+| 📤 **Daily Report Export** | One-tap daily summary sharing via Web Share API or clipboard export. |
 | ❤️ **Smart Memory** | One-tap logging for favorites and recently used foods. |
 | 🌒 **Technical Aesthetic** | State-of-the-art solid elevated UI with native Light/Dark/System support. |
-| 📱 **Adaptive Design** | Optimized for mobile-first workflows without sacrificing desktop power. |
+| 📱 **Adaptive Design** | Optimized for mobile-first workflows with dedicated mobile action bar. |
 
 ---
 
@@ -64,6 +66,7 @@ NutraFlux is engineered using the most resilient modern frontend standards:
 
 - **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
 - **Framework:** [Vite](https://vitejs.dev/) for ultra-fast HMR and optimized builds
+- **Testing:** [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) for fast, reliable unit and integration tests
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (Leveraging OKLCH color space & container queries)
 - **Design System:** [Radix UI](https://www.radix-ui.com/) primitives + custom solid elevated components
 - **Experience:** [Lucide React](https://lucide.dev/) for iconography & [React-Toastify](https://github.com/fkhadra/react-toastify) for toast management
@@ -77,7 +80,7 @@ NutraFlux is engineered using the most resilient modern frontend standards:
 - **Node.js:** `v22.0.0` or higher
 - **pnpm:** `v10.0.0` or higher (Recommended)
 
-### ⚙️ Installation
+### ⚙️ Installation & Usage
 
 1. **Clone the repository:**
    ```bash
@@ -95,7 +98,14 @@ NutraFlux is engineered using the most resilient modern frontend standards:
    pnpm dev
    ```
 
-4. **Prepare for production:**
+4. **Run automated tests & linting:**
+   ```bash
+   pnpm test
+   pnpm lint
+   pnpm typecheck
+   ```
+
+5. **Prepare for production:**
    ```bash
    pnpm build
    ```

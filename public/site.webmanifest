@@ -3,8 +3,8 @@
   "short_name": "NutraFlux",
   "start_url": "/NutraFlux/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#0ea5e9",
+  "background_color": "#f4fbf5",
+  "theme_color": "#52B788",
   "icons": [
     {
       "src": "favicon.svg",

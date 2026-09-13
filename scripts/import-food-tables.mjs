@@ -1,13 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
-import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { XMLParser } from 'fast-xml-parser'
-
-const require = createRequire(import.meta.url)
-const XLSX = require('xlsx')
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const projectRoot = resolve(scriptDir, '..')
@@ -148,33 +144,14 @@ async function readXmlTable(fileName) {
   return normalizeRows(rows)
 }
 
-function readXlsxTable(fileName) {
-  const filePath = join(sourceDir, fileName)
-  const workbook = XLSX.readFile(filePath)
-  const firstSheetName = workbook.SheetNames[0]
-
-  if (!firstSheetName) {
-    return []
-  }
-
-  const sheet = workbook.Sheets[firstSheetName]
-
-  return XLSX.utils.sheet_to_json(sheet, { defval: '' })
-}
-
 async function readTable(baseName) {
   const xmlPath = join(sourceDir, `${baseName}.xml`)
-  const xlsxPath = join(sourceDir, `${baseName}.xlsx`)
 
   if (existsSync(xmlPath)) {
     return readXmlTable(`${baseName}.xml`)
   }
 
-  if (existsSync(xlsxPath)) {
-    return readXlsxTable(`${baseName}.xlsx`)
-  }
-
-  throw new Error(`No XML or XLSX file found for ${baseName}`)
+  throw new Error(`No XML file found for ${baseName}`)
 }
 
 function deriveCategory(name, servingLabel, sourceName) {

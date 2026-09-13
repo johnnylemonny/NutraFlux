@@ -1,4 +1,4 @@
-import { Copy, Flame } from 'lucide-react'
+import { Copy, Flame, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -9,10 +9,12 @@ import type { Entry, MealSummary } from '@/types'
 export function MealCard({
   summary,
   onDuplicate,
+  onDelete,
   isHighlightedEntry,
 }: {
   summary: MealSummary
   onDuplicate: (entry: Entry) => void
+  onDelete: (entry: Entry) => void
   isHighlightedEntry: (entryId: string) => boolean
 }) {
   const mealToneClass = `meal-${summary.key}`
@@ -91,6 +93,16 @@ export function MealCard({
                   onClick={() => onDuplicate(entry)}
                 >
                   <Copy className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  className="hover:bg-(--tone-soft) hover:text-(--danger)"
+                  aria-label={`Delete ${entry.food.name}`}
+                  onClick={() => onDelete(entry)}
+                >
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
             </li>

@@ -32,12 +32,33 @@ function isTrackerState(value: unknown): value is TrackerState {
   )
 }
 
-function readInitialState() {
-  if (typeof window === 'undefined') {
-    return defaultState
-  }
+let memoryStorageBackup: string | null = null
 
-  const cached = window.localStorage.getItem(STORAGE_KEY)
+function getStoredRaw(): string | null {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem(STORAGE_KEY)
+    }
+  } catch {
+    // Private mode or storage quota restriction
+  }
+  return memoryStorageBackup
+}
+
+function setStoredRaw(value: string): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(STORAGE_KEY, value)
+      return
+    }
+  } catch {
+    // QuotaExceededError or SecurityError fallback
+  }
+  memoryStorageBackup = value
+}
+
+function readInitialState(): TrackerState {
+  const cached = getStoredRaw()
 
   if (!cached) {
     return defaultState
@@ -66,7 +87,7 @@ export function useCalorieTracker() {
   const [lastAddedEntryId, setLastAddedEntryId] = useState<string | null>(null)
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    setStoredRaw(JSON.stringify(state))
   }, [state])
 
   const addEntry = (input: { meal: MealKey; quantity: number; food: FoodSnapshot }) => {
@@ -102,6 +123,14 @@ export function useCalorieTracker() {
     setLastAddedEntryId(duplicated.id)
 
     return duplicated
+  }
+
+  const deleteEntry = (entryId: string) => {
+    setState((current) => ({
+      ...current,
+      entries: current.entries.filter((entry) => entry.id !== entryId),
+    }))
+    setLastAddedEntryId(null)
   }
 
   const resetDay = () => {
@@ -183,6 +212,7 @@ export function useCalorieTracker() {
     lastAddedEntryId,
     addEntry,
     duplicateEntry,
+    deleteEntry,
     resetDay,
     loadDemoDay,
     setDailyTarget,

@@ -23,19 +23,27 @@ export function createFoodSnapshot(food: FoodItem): FoodSnapshot {
   }
 }
 
+function generateEntryId(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+}
+
 export function createEntry(input: {
   meal: MealKey
   quantity: number
   food: FoodSnapshot
 }): Entry {
-  const quantity = round(input.quantity)
+  const quantity = Math.max(0.1, round(input.quantity || 1))
+  const calories = Math.max(0, Number(input.food.calories) || 0)
 
   return {
-    id: crypto.randomUUID(),
+    id: generateEntryId(),
     meal: input.meal,
     quantity,
     food: input.food,
-    totalCalories: Math.round(input.food.calories * quantity),
+    totalCalories: Math.round(calories * quantity),
     createdAt: new Date().toISOString(),
   }
 }
@@ -99,4 +107,42 @@ export function buildDemoEntries() {
       })
     })
     .filter((entry): entry is Entry => entry !== null)
+}
+
+export function generateDailySummaryText(entries: Entry[], dailyTarget: number): string {
+  const totals = getDailyTotals(entries, dailyTarget)
+  const summaries = getMealSummaries(entries)
+  const dateStr = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  })
+
+  const remainingText =
+    totals.remaining >= 0 ? `${totals.remaining} kcal remaining` : `${Math.abs(totals.remaining)} kcal over target`
+
+  const lines: string[] = [
+    `📊 NutraFlux Daily Summary - ${dateStr}`,
+    `Target: ${dailyTarget} kcal | Consumed: ${totals.consumed} kcal (${remainingText})`,
+    '',
+  ]
+
+  let hasItems = false
+  for (const meal of summaries) {
+    if (meal.entries.length > 0) {
+      hasItems = true
+      lines.push(`${meal.label} (${meal.totalCalories} kcal):`)
+      for (const entry of meal.entries) {
+        lines.push(`  • ${entry.food.name} (${entry.quantity}×) - ${entry.totalCalories} kcal`)
+      }
+      lines.push('')
+    }
+  }
+
+  if (!hasItems) {
+    lines.push('No meals logged yet today.', '')
+  }
+
+  lines.push('Tracked with NutraFlux - local-first nutritional momentum.')
+  return lines.join('\n')
 }

@@ -9,6 +9,7 @@ import {
   Plus,
   RefreshCcw,
   Search,
+  Share2,
   Sparkles,
   Star,
   X,
@@ -21,6 +22,14 @@ import { MealCard } from '@/components/meal-card'
 import { ProgressRing } from '@/components/progress-ring'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
@@ -36,6 +45,7 @@ import { useTheme } from '@/hooks/use-theme'
 import {
   createFoodSnapshot,
   formatMacroSummary,
+  generateDailySummaryText,
   getDailyTotals,
   getMealSummaries,
 } from '@/lib/tracker'
@@ -66,6 +76,7 @@ function App() {
     lastAddedEntryId,
     addEntry,
     duplicateEntry,
+    deleteEntry,
     resetDay,
     loadDemoDay,
     setDailyTarget,
@@ -76,6 +87,7 @@ function App() {
   } = useCalorieTracker()
   const { resolvedTheme } = useTheme(state.settings.themePreference)
 
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
   const [selectedMeal, setSelectedMeal] = useState<MealKey>('breakfast')
   const [searchDraft, setSearchDraft] = useState('')
   const [submittedQuery, setSubmittedQuery] = useState('')
@@ -227,11 +239,11 @@ function App() {
     const safeName = customName.trim()
     const parsedCalories = Number(customCalories)
 
-    if (!safeName || Number.isNaN(parsedCalories) || parsedCalories <= 0) {
+    if (!safeName || Number.isNaN(parsedCalories) || parsedCalories <= 0 || parsedCalories > 10000) {
       toast.error(
         <div>
           <div className="font-semibold">Add a valid custom item</div>
-          <div className="text-xs opacity-90 font-medium">A name and calories per serving are both required.</div>
+          <div className="text-xs opacity-90 font-medium">A valid name and calories per serving (1-10000 kcal) are required.</div>
         </div>
       )
       return
@@ -275,6 +287,57 @@ function App() {
         <div className="text-xs opacity-90 font-medium">{duplicated.food.name} was added one more time.</div>
       </div>
     )
+  }
+
+  const handleDeleteEntry = (entry: Entry) => {
+    deleteEntry(entry.id)
+    toast.info(
+      <div>
+        <div className="font-semibold">{entry.food.name} removed</div>
+        <div className="text-xs opacity-90 font-medium">{entry.totalCalories} kcal removed from your day.</div>
+      </div>
+    )
+  }
+
+  const handleShareSummary = async () => {
+    const summaryText = generateDailySummaryText(state.entries, state.settings.dailyTarget)
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'NutraFlux Daily Summary',
+          text: summaryText,
+        })
+        toast.success(
+          <div>
+            <div className="font-semibold">Summary shared</div>
+            <div className="text-xs opacity-90 font-medium">Daily momentum summary sent.</div>
+          </div>
+        )
+        return
+      } catch (err) {
+        if ((err as Error).name === 'AbortError') {
+          return
+        }
+      }
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(summaryText)
+        toast.success(
+          <div>
+            <div className="font-semibold">Summary copied</div>
+            <div className="text-xs opacity-90 font-medium">Daily report copied to clipboard. Ready to paste anywhere.</div>
+          </div>
+        )
+        return
+      } catch {
+        // clipboard error fallback
+      }
+    }
+
+    toast.info('Sharing is not supported in this browser.')
   }
 
   const handleResetDay = () => {
@@ -694,57 +757,53 @@ function App() {
                           return (
                              <div
                                key={food.id}
-                               role="button"
-                               tabIndex={0}
                                className={cn(
-                                 'group w-full rounded-3xl border p-4 text-left transition duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--tone-strong)',
+                                 'group flex flex-col justify-between rounded-3xl border p-4 text-left transition duration-300 hover:-translate-y-0.5',
                                  isSelected
                                    ? 'border-(--tone-soft-border) bg-(--tone-soft)'
                                    : 'border-(--border-soft) bg-(--surface-elevated) hover:border-(--border-strong) hover:bg-(--surface-elevated-strong)',
                                )}
-                               onClick={() => setSelectedFoodId(food.id)}
-                               onKeyDown={(event) => {
-                                 if (event.key === 'Enter' || event.key === ' ') {
-                                   event.preventDefault()
-                                   setSelectedFoodId(food.id)
-                                 }
-                               }}
                              >
                                <div className="flex items-start justify-between gap-3">
-                                 <div>
+                                 <button
+                                   type="button"
+                                   className="grow rounded-xl text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--tone-strong)"
+                                   onClick={() => setSelectedFoodId(food.id)}
+                                 >
                                    <div className="text-sm font-semibold text-(--foreground)">
                                      {food.name}
                                    </div>
                                    <div className="mt-1 text-xs uppercase tracking-[0.18em] text-(--muted-foreground)">
                                      {food.category}
                                    </div>
-                                 </div>
+                                 </button>
                                  <button
                                    type="button"
                                    aria-label={isFavorite ? `Remove ${food.name} from favorites` : `Save ${food.name} as favorite`}
                                    className={cn(
-                                     'rounded-full p-2 transition',
+                                     'shrink-0 rounded-full p-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--tone-strong)',
                                      isFavorite
                                        ? 'bg-(--tone-soft) text-(--tone-strong)'
                                        : 'bg-(--surface-subtle) text-(--muted-foreground) hover:text-(--foreground)',
                                    )}
-                                   onClick={(event) => {
-                                     event.stopPropagation()
-                                     toggleFavorite(food.id)
-                                   }}
+                                   onClick={() => toggleFavorite(food.id)}
                                  >
                                    <Star className={cn('size-4', isFavorite && 'fill-current')} />
                                  </button>
-                               </div>
-                               <div className="mt-4 flex items-center justify-between gap-3">
-                                 <span className="text-sm text-(--muted-foreground)">
-                                   {food.servingLabel}
-                                 </span>
-                                 <span className="rounded-full bg-(--surface-subtle) px-3 py-1 text-sm font-semibold text-(--foreground)">
-                                   {food.calories} kcal
-                                 </span>
-                               </div>
-                             </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  className="mt-4 flex w-full items-center justify-between gap-3 text-left focus-visible:outline-none"
+                                  onClick={() => setSelectedFoodId(food.id)}
+                                >
+                                  <span className="text-sm text-(--muted-foreground)">
+                                    {food.servingLabel}
+                                  </span>
+                                  <span className="rounded-full bg-(--surface-subtle) px-3 py-1 text-sm font-semibold text-(--foreground)">
+                                    {food.calories} kcal
+                                  </span>
+                                </button>
+                              </div>
                           )
                         })}
                       </div>
@@ -918,10 +977,14 @@ function App() {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <Button type="button" variant="secondary" onClick={handleResetDay}>
+                <div className="flex flex-wrap gap-3">
+                  <Button type="button" variant="secondary" onClick={() => setIsResetDialogOpen(true)}>
                     Reset day
                     <RefreshCcw className="size-4" />
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={handleShareSummary}>
+                    Share summary
+                    <Share2 className="size-4" />
                   </Button>
                   <Button asChild variant="ghost">
                     <a href="#tracker">Add more food</a>
@@ -936,6 +999,7 @@ function App() {
                   key={summary.key}
                   summary={summary}
                   onDuplicate={handleDuplicateEntry}
+                  onDelete={handleDeleteEntry}
                   isHighlightedEntry={(entryId) => entryId === lastAddedEntryId}
                 />
               ))}
@@ -969,9 +1033,11 @@ function App() {
             <div className="grid gap-6 lg:grid-cols-[1.35fr_0.65fr]">
               <article className="card-panel overflow-hidden rounded-4xl">
                 <img
-                  src={`${import.meta.env.BASE_URL}calorie-bowl.jpg`}
+                  src={`${import.meta.env.BASE_URL}calorie-bowl.webp`}
                   alt="A delicious, healthy bowl with fresh vegetables, avocado, and protein representing clean eating."
                   loading="lazy"
+                  width={1200}
+                  height={448}
                   className="h-56 w-full object-cover"
                 />
                 <div className="p-6">
@@ -1046,6 +1112,64 @@ function App() {
           </div>
         </footer>
       </div>
+
+      <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset Today&apos;s Entries?</DialogTitle>
+            <DialogDescription>
+              This will clear all logged meals and calories for today. Your daily target, favorite items, and theme preferences will remain saved.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsResetDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => {
+                setIsResetDialogOpen(false)
+                handleResetDay()
+              }}
+            >
+              Yes, reset day
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <nav
+        aria-label="Mobile navigation"
+        className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-full border border-(--border-strong) bg-(--surface-elevated)/95 p-1.5 shadow-(--shadow-lift) backdrop-blur-md md:hidden"
+      >
+        <a
+          href="#tracker"
+          className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-(--foreground) transition active:scale-95 hover:bg-(--surface-subtle)"
+        >
+          <Plus className="size-3.5 text-(--tone-strong)" />
+          Log Food
+        </a>
+        <a
+          href="#overview"
+          className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground)"
+        >
+          <Sparkles className="size-3.5" />
+          Overview
+        </a>
+        <button
+          type="button"
+          onClick={handleShareSummary}
+          className="flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground)"
+        >
+          <Share2 className="size-3.5" />
+          Share
+        </button>
+      </nav>
 
       <ToastContainer
         position="top-right"

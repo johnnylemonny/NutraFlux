@@ -50,8 +50,8 @@ By participating in this project, you are expected to uphold our high standards 
 To maintain the quality of the project, please adhere to the following:
 
 - **Clean Code**: Use descriptive naming and keep functions focused.
-- **Linting & Types**: Always run `pnpm lint` and `pnpm typecheck` before committing. CI will reject PRs with warnings.
-- **Design**: Follow the existing glassmorphism aesthetic. Use Tailwind CSS v4 variables for colors.
+- **Linting & Tests**: Always run `pnpm test`, `pnpm lint`, and `pnpm typecheck` before committing. CI will reject PRs with failures or warnings.
+- **Design**: Follow the existing solid-elevated, typography-driven aesthetic (no glassmorphism). Use Tailwind CSS v4 variables and OKLCH color palette.
 - **Commit Messages**: We prefer [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) (e.g., `feat: add protein target chart`, `fix: resolve mobile layout overflow`).
 
 ## Licensing
