@@ -9,7 +9,7 @@
     "food:generate": "node scripts/import-food-tables.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
     "build": "tsc6 -b && vite build",
-    "prebuild": "pnpm food:generate",
+    "prebuild": "node scripts/import-food-tables.mjs",
     "lint": "eslint .",
     "typecheck": "tsc6 --noEmit -p tsconfig.app.json && tsc6 --noEmit -p tsconfig.node.json",
     "test": "vitest run",

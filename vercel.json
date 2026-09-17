@@ -33,7 +33,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!assets/|favicon|site\\.webmanifest|robots\\.txt|sitemap\\.xml).*)/?",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
