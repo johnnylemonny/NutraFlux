@@ -109,29 +109,63 @@ export function buildDemoEntries() {
     .filter((entry): entry is Entry => entry !== null)
 }
 
-export function generateDailySummaryText(entries: Entry[], dailyTarget: number): string {
+export function generateDailySummaryText(
+  entries: Entry[],
+  dailyTarget: number,
+  locale: 'pl' | 'en' = 'en'
+): string {
   const totals = getDailyTotals(entries, dailyTarget)
   const summaries = getMealSummaries(entries)
-  const dateStr = new Date().toLocaleDateString('en-US', {
+  const dateLocale = locale === 'pl' ? 'pl-PL' : 'en-US'
+  const dateStr = new Date().toLocaleDateString(dateLocale, {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
   })
 
-  const remainingText =
-    totals.remaining >= 0 ? `${totals.remaining} kcal remaining` : `${Math.abs(totals.remaining)} kcal over target`
+  const isPl = locale === 'pl'
 
-  const lines: string[] = [
-    `📊 NutraFlux Daily Summary - ${dateStr}`,
-    `Target: ${dailyTarget} kcal | Consumed: ${totals.consumed} kcal (${remainingText})`,
-    '',
-  ]
+  const remainingText =
+    totals.remaining >= 0
+      ? isPl
+        ? `pozostało ${totals.remaining} kcal`
+        : `${totals.remaining} kcal remaining`
+      : isPl
+        ? `przekroczono o ${Math.abs(totals.remaining)} kcal`
+        : `${Math.abs(totals.remaining)} kcal over target`
+
+  const lines: string[] = isPl
+    ? [
+        `📊 NutraFlux - Podsumowanie Dnia (${dateStr})`,
+        `Cel: ${dailyTarget} kcal | Spożyte: ${totals.consumed} kcal (${remainingText})`,
+        '',
+      ]
+    : [
+        `📊 NutraFlux Daily Summary - ${dateStr}`,
+        `Target: ${dailyTarget} kcal | Consumed: ${totals.consumed} kcal (${remainingText})`,
+        '',
+      ]
+
+  const mealLabels: Record<MealKey, string> = isPl
+    ? {
+        breakfast: 'Śniadanie',
+        lunch: 'Obiad',
+        dinner: 'Kolacja',
+        snacks: 'Przekąski',
+      }
+    : {
+        breakfast: 'Breakfast',
+        lunch: 'Lunch',
+        dinner: 'Dinner',
+        snacks: 'Snacks',
+      }
 
   let hasItems = false
   for (const meal of summaries) {
     if (meal.entries.length > 0) {
       hasItems = true
-      lines.push(`${meal.label} (${meal.totalCalories} kcal):`)
+      const label = mealLabels[meal.key] || meal.label
+      lines.push(`${label} (${meal.totalCalories} kcal):`)
       for (const entry of meal.entries) {
         lines.push(`  • ${entry.food.name} (${entry.quantity}×) - ${entry.totalCalories} kcal`)
       }
@@ -140,9 +174,13 @@ export function generateDailySummaryText(entries: Entry[], dailyTarget: number):
   }
 
   if (!hasItems) {
-    lines.push('No meals logged yet today.', '')
+    lines.push(isPl ? 'Brak zapisanych posiłków na dzisiaj.' : 'No meals logged yet today.', '')
   }
 
-  lines.push('Tracked with NutraFlux - local-first nutritional momentum.')
+  lines.push(
+    isPl
+      ? 'Zapisano w NutraFlux - Twój darmowy i prywatny licznik kalorii.'
+      : 'Tracked with NutraFlux - local-first nutritional momentum.'
+  )
   return lines.join('\n')
 }

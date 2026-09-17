@@ -11,13 +11,23 @@ export function MealCard({
   onDuplicate,
   onDelete,
   isHighlightedEntry,
+  localizedLabel,
+  localizedDescription,
+  emptyTitle,
+  emptyPrompt,
 }: {
   summary: MealSummary
   onDuplicate: (entry: Entry) => void
   onDelete: (entry: Entry) => void
   isHighlightedEntry: (entryId: string) => boolean
+  localizedLabel?: string
+  localizedDescription?: string
+  emptyTitle?: string
+  emptyPrompt?: string
 }) {
   const mealToneClass = `meal-${summary.key}`
+  const title = localizedLabel || summary.label
+  const description = localizedDescription || summary.description
 
   return (
     <section
@@ -32,10 +42,10 @@ export function MealCard({
           <p className="eyebrow">{summary.key}</p>
           <div>
             <h3 id={`meal-${summary.key}`} className="text-2xl font-semibold tracking-[-0.04em]">
-              {summary.label}
+              {title}
             </h3>
-            <p className="max-w-[32ch] text-sm text-(--muted-foreground)">
-              {summary.description}
+            <p className="max-w-[36ch] text-sm text-(--muted-foreground)">
+              {description}
             </p>
           </div>
         </div>
@@ -113,9 +123,11 @@ export function MealCard({
           <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-(--surface-elevated) text-(--tone-strong)">
             <Flame className="size-5" />
           </div>
-          <h4 className="text-lg font-semibold text-(--foreground)">Nothing logged yet</h4>
+          <h4 className="text-lg font-semibold text-(--foreground)">
+            {emptyTitle || 'Nothing logged yet'}
+          </h4>
           <p className="mt-2 text-sm text-(--muted-foreground)">
-            Add your first item to start building a clean daily picture.
+            {emptyPrompt || 'Add your first item to start building a clean daily picture.'}
           </p>
         </div>
       )}

@@ -6,17 +6,18 @@
   <img src="public/favicon.svg" width="100" height="100" alt="NutraFlux Logo">
 
   # NutraFlux
-  ### Professional • Local-First • High-Performance
+  ### Professional • Free & Private • Dual-Language (PL / EN)
 
   [![Deploy Status](https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/deploy.yml?branch=main&style=for-the-badge&logo=github&label=deploy&color=52B788)](https://github.com/johnnylemonny/NutraFlux/actions/workflows/deploy.yml)
   [![Lint Status](https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/super-linter.yml?branch=main&style=for-the-badge&logo=github&label=lint&color=52B788)](https://github.com/johnnylemonny/NutraFlux/actions/workflows/super-linter.yml)
-  [![License](https://img.shields.io/github/license/johnnylemonny/NutraFlux?style=for-the-badge&color=52B788)](https://github.com/johnnylemonny/NutraFlux/blob/main/LICENSE)
+  [![CodeQL Status](https://img.shields.io/github/actions/workflow/status/johnnylemonny/NutraFlux/codeql.yml?branch=main&style=for-the-badge&logo=github&label=security&color=52B788)](https://github.com/johnnylemonny/NutraFlux/actions/workflows/codeql.yml)
+  [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-52B788.svg?style=for-the-badge)](https://github.com/johnnylemonny/NutraFlux/blob/main/LICENSE)
   [![Live Demo](https://img.shields.io/badge/Live-Demo-52B788?style=for-the-badge)](https://johnnylemonny.github.io/NutraFlux/)
 
-  **Fuel your nutritional momentum with precision.**  
-  NutraFlux is a premium, local-first daily calorie and macro tracker built for those who demand speed, privacy, and technical excellence.
+  **Your daily nutrition and calorie companion.**  
+  NutraFlux is an accessible, commercial-grade web application for tracking daily calories and macronutrients without accounts, subscriptions, or invasive ads. 100% private, offline-ready, and community-funded.
 
-  [Explore Docs](#-getting-started) • [Report Bug](https://github.com/johnnylemonny/NutraFlux/issues) • [Request Feature](https://github.com/johnnylemonny/NutraFlux/issues)
+  [Live App](https://johnnylemonny.github.io/NutraFlux/) • [Report Feedback / Bug](https://github.com/johnnylemonny/NutraFlux/issues) • [Support the Project ☕](https://buymeacoffee.com/johnnylemonny)
 
 </div>
 
@@ -31,16 +32,18 @@
 - [🏗️ Project Architecture](#️-project-architecture)
 - [🔐 Privacy & Data Philosophy](#-privacy--data-philosophy)
 - [🤝 Contributing](#-contributing)
+- [☕ Support & Donations](#-support--donations)
 - [⚖️ License](#️-license)
-- [🙏 Acknowledgements](#-acknowledgements)
 
 ---
 
 ## 🌟 Overview
 
-**NutraFlux** is a high-performance nutritional tracking application designed for power users who value both their time and their data privacy. It eliminates the friction of traditional trackers by offering an **instant, search-first logging experience** combined with a stunning solid-elevated typography-driven interface.
-
-Unlike many modern trackers that rely on slow API calls and invasive data-sharing, NutraFlux is built with a **local-first** architecture. Your personal data never leaves your browser, ensuring zero-latency interactions and 100% offline capability.
+**NutraFlux** is a clean, accessible nutrition and calorie tracker built for everyday health-conscious individuals. It removes the stress of typical fitness apps:
+- **Zero forced accounts or logins:** Your data is strictly stored in your device's browser.
+- **Zero ads or paywalls:** Free forever, supported purely by community donations.
+- **Dual-language (PL / EN):** Seamlessly detects Polish or English from your browser preferences with a quick toggle button.
+- **Instant speed:** 100% offline-ready, loading instantly on smartphones and desktop browsers.
 
 ---
 
@@ -48,28 +51,28 @@ Unlike many modern trackers that rely on slow API calls and invasive data-sharin
 
 | Feature | Description |
 | :--- | :--- |
-| ⚡ **Nutra-Speed Logging** | Instant, search-first interface for logging meals in seconds. |
-| 🔍 **Metri-Food Lookup** | Advanced full-text search with wildcard support over a compact local catalog. |
-| 🥗 **Flux Categories** | Smart categorization into Breakfast, Lunch, Dinner, and Snacks. |
-| 📊 **Precision Momentum** | Real-time progress indicators, calorie budgeting, and macro breakdowns. |
-| 🗑️ **Granular Entry Control** | Duplicate or delete individual entries with instant feedback and safe reset dialogs. |
-| 📤 **Daily Report Export** | One-tap daily summary sharing via Web Share API or clipboard export. |
-| ❤️ **Smart Memory** | One-tap logging for favorites and recently used foods. |
-| 🌒 **Technical Aesthetic** | State-of-the-art solid elevated UI with native Light/Dark/System support. |
-| 📱 **Adaptive Design** | Optimized for mobile-first workflows with dedicated mobile action bar. |
+| 🌐 **Bilingual (PL & EN)** | Fully localized interface with automatic browser language detection and instant toggle. |
+| ⚡ **Fast Food Lookup** | Search across 2,000+ USDA-verified foods with wildcard support or log custom meals in seconds. |
+| 🥗 **4 Daily Meals** | Streamlined logging for Breakfast, Lunch, Dinner, and Snacks. |
+| 🎯 **Goal Presets** | One-tap goal setup: Weight Loss (1,700 kcal), Maintenance (2,100 kcal), or Muscle Gain (2,500 kcal). |
+| 🗑️ **Granular Control** | Duplicate or delete entries with single taps and protected by a safe reset dialog. |
+| 📤 **Daily Summary Export** | Export your daily report via native Web Share on mobile or copy to clipboard on desktop. |
+| ☕ **Community Funded** | Integrated Buy Me a Coffee / GitHub Sponsors donation cards for supporters. |
+| 💬 **In-App Feedback** | Built-in modal for submitting feature requests and bug reports directly to GitHub. |
+| 🌒 **Adaptive Theme** | Native Dark / Light mode with smooth eye-comfort transitions. |
+| 🔍 **SEO & Structured Data** | High-performance Schema.org `WebApplication` and `FAQPage` metadata. |
 
 ---
 
 ## 🛠️ Tech Stack
 
-NutraFlux is engineered using the most resilient modern frontend standards:
-
 - **Core:** [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
-- **Framework:** [Vite](https://vitejs.dev/) for ultra-fast HMR and optimized builds
-- **Testing:** [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/) for fast, reliable unit and integration tests
-- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/) (Leveraging OKLCH color space & container queries)
-- **Design System:** [Radix UI](https://www.radix-ui.com/) primitives + custom solid elevated components
-- **Experience:** [Lucide React](https://lucide.dev/) for iconography & [React-Toastify](https://github.com/fkhadra/react-toastify) for toast management
+- **Framework:** [Vite 8](https://vitejs.dev/) with optimized production bundling
+- **Testing:** [Vitest 3](https://vitest.dev/) + [Testing Library](https://testing-library.com/) (21 unit and integration tests)
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
+- **UI Components:** [Radix UI](https://www.radix-ui.com/) primitives
+- **Icons & Notifications:** [Lucide React](https://lucide.dev/) & [React-Toastify](https://github.com/fkhadra/react-toastify)
+- **Deployment:** Vercel & GitHub Pages ready (`vercel.json`, `robots.txt`, `sitemap.xml`)
 
 ---
 
@@ -78,7 +81,7 @@ NutraFlux is engineered using the most resilient modern frontend standards:
 ### 📋 Prerequisites
 
 - **Node.js:** `v22.0.0` or higher
-- **pnpm:** `v10.0.0` or higher (Recommended)
+- **pnpm:** `v10.0.0` or higher
 
 ### ⚙️ Installation & Usage
 
@@ -93,93 +96,39 @@ NutraFlux is engineered using the most resilient modern frontend standards:
    pnpm install
    ```
 
-3. **Spin up the development environment:**
+3. **Start local dev server:**
    ```bash
    pnpm dev
    ```
 
-4. **Run automated tests & linting:**
+4. **Run test suite:**
    ```bash
    pnpm test
-   pnpm lint
-   pnpm typecheck
    ```
 
-5. **Prepare for production:**
+5. **Typecheck & Lint:**
+   ```bash
+   pnpm typecheck
+   pnpm lint
+   ```
+
+6. **Production build:**
    ```bash
    pnpm build
    ```
 
 ---
 
-## 🏗️ Project Architecture
+## ☕ Support & Donations
 
-```text
-src/
-├── components/   # Atomic UI components & custom Design System
-├── data/         # Optimized local nutritional catalogs
-├── hooks/        # Reactive logic for tracking, theming, and persistence
-├── lib/          # Utilities, math engines, and formatting helpers
-├── types/        # Comprehensive TypeScript definitions
-└── App.tsx       # Root orchestrator and layout definition
-```
+NutraFlux is completely free, open-source, and has no advertising or premium tiers. If this application helps you on your fitness or diet journey, consider supporting ongoing development:
 
----
-
-## 🔐 Privacy & Data Philosophy
-
-NutraFlux strictly adheres to the **local-first** principle:
-
-- **Zero Cloud:** No servers, no syncing, no data leaks.
-- **Client-Side Storage:** All nutritional history and user preferences are stored in `localStorage`.
-- **Absolute Ownership:** Your health data belongs to you, and you alone. It exists only on your device.
-- **Offline Integrity:** The app is fully functional without an internet connection, ensuring your tracking isn't interrupted by network issues.
-
----
-
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Please review our [**Contributing Guidelines**](CONTRIBUTING.md) before starting.
-2. Check the [**Projects**](https://github.com/johnnylemonny/NutraFlux/projects) and [**Issues**](https://github.com/johnnylemonny/NutraFlux/issues) for open tasks.
-3. Open a Pull Request using our [**Standard Template**](.github/pull_request_template.md).
+- ☕ **Buy Me a Coffee:** [buymeacoffee.com/johnnylemonny](https://buymeacoffee.com/johnnylemonny)
+- 💖 **GitHub Sponsors:** [github.com/sponsors/johnnylemonny](https://github.com/sponsors/johnnylemonny)
 
 ---
 
 ## ⚖️ License
 
-Distributed under the **GNU Affero General Public License v3 (AGPL-3.0)**. See `LICENSE` for more information. This license was chosen to ensure the software remains free and that any improvements are contributed back to the public domain.
-
----
-
-## 🙏 Acknowledgements
-
-- Inspired by the [App Ideas](https://github.com/florinpop17/app-ideas) community.
-- Icons by [Lucide](https://lucide.dev/).
-- Design inspiration from modern typography-driven interfaces.
-
----
-
-## 🤖 AI Agents & Developer Tooling
-
-This repository is optimized for development with AI coding agents:
-- **[AGENTS.md](AGENTS.md)**: A context file outlining codebase structure, tech stack, rules, and workflows to help AI agents ramp up instantly.
-- **[Graphify](https://github.com/safishamsi/graphify)**: Fully mapped using Graphify. You can view the generated codebase graph in [graphify-out/graph.html](graphify-out/graph.html) and check the comprehensive structural report in [graphify-out/GRAPH_REPORT.md](graphify-out/GRAPH_REPORT.md).
-
----
-
-<p align="center">
-  <i>Built with technical passion as part of a public open-source health ecosystem.</i>
-</p>
-
-<p align="center">
-<pre align="center">
-  _   _       _              ______ _             
- | \ | |     | |            |  ____| |            
- |  \| |_   _| |_ _ __ __ _ | |__  | |_   ___  __ 
- | . ` | | | | __| '__/ _` ||  __| | | | | \ \/ / 
- | |\  | |_| | |_| | | (_| || |    | | |_| |>  <  
- |_| \_|\__,_|\__|_|  \__,_||_|    |_|\__,_/_/\_\ 
-</pre>
-</p>
+Distributed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  
+See [`LICENSE`](LICENSE) for details.
