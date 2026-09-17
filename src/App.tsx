@@ -1000,10 +1000,10 @@ function App() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">
-                  {t.nav.tracker}
+                  {t.meals.sectionTitle}
                 </h2>
                 <p className="text-sm text-(--muted-foreground)">
-                  {t.overview.todayAtGlance} • {state.entries.length} {t.meals.itemsCount.replace('{count}', '')}
+                  {t.meals.sectionSubtitle} • {state.entries.length} {t.meals.itemsCount.replace('{count}', '')}
                 </p>
               </div>
             </div>
@@ -1094,7 +1094,7 @@ function App() {
                 </button>
                 <span>•</span>
                 <a
-                  href="https://buymeacoffee.com/johnnylemonny"
+                  href="https://buymeacoffee.com/zdfpbnc5iv"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-(--tone-strong) hover:underline font-bold"
@@ -1155,18 +1155,18 @@ function App() {
       {/* MOBILE BOTTOM ACTION DOCK */}
       <nav
         aria-label="Mobile navigation"
-        className="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-1 rounded-full border border-(--border-strong) bg-(--surface-elevated)/95 p-1.5 shadow-(--shadow-lift) backdrop-blur-md md:hidden"
+        className="fixed bottom-3 inset-x-3 z-40 mx-auto max-w-sm flex items-center justify-between gap-1 rounded-full border border-(--border-strong) bg-(--surface-elevated)/95 p-1.5 shadow-(--shadow-lift) backdrop-blur-xl md:hidden"
       >
         <a
           href="#tracker"
-          className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-bold text-(--foreground) transition active:scale-95 hover:bg-(--surface-subtle)"
+          className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-(--tone-strong) text-white px-3 py-2 text-xs font-bold shadow-xs transition active:scale-95 hover:bg-(--tone-strong)/90"
         >
-          <Plus className="size-3.5 text-(--tone-strong)" />
+          <Plus className="size-3.5" />
           <span>{t.nav.tracker}</span>
         </a>
         <a
           href="#overview"
-          className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground)"
+          className="flex-1 flex items-center justify-center gap-1 rounded-full px-2.5 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground)"
         >
           <Sparkles className="size-3.5" />
           <span>{t.nav.overview}</span>
@@ -1174,7 +1174,7 @@ function App() {
         <button
           type="button"
           onClick={handleShareSummary}
-          className="flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground)"
+          className="flex-1 flex items-center justify-center gap-1 rounded-full px-2.5 py-2 text-xs font-semibold text-(--muted-foreground) transition active:scale-95 hover:bg-(--surface-subtle) hover:text-(--foreground) cursor-pointer"
           aria-label={t.summary.shareSummary}
         >
           <Share2 className="size-3.5" />
@@ -1183,8 +1183,9 @@ function App() {
         <button
           type="button"
           onClick={() => setLocale(locale === 'pl' ? 'en' : 'pl')}
-          className="flex items-center gap-1 rounded-full px-2.5 py-2 text-xs font-black text-(--tone-strong) transition active:scale-95 hover:bg-(--surface-subtle)"
+          className="size-8 shrink-0 flex items-center justify-center rounded-full border border-(--border-soft) bg-(--surface-subtle) text-[11px] font-black text-(--tone-strong) transition active:scale-90 hover:border-(--border-strong) cursor-pointer"
           aria-label="Toggle language"
+          title="Toggle language"
         >
           {locale === 'pl' ? 'EN' : 'PL'}
         </button>

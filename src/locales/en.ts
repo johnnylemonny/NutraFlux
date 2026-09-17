@@ -66,6 +66,8 @@ export const en = {
     unit: 'kcal / day',
   },
   meals: {
+    sectionTitle: "Today's meals",
+    sectionSubtitle: 'Logged food entries and calorie distribution',
     breakfast: 'Breakfast',
     breakfastDesc: 'Steady energy to start your morning right.',
     lunch: 'Lunch',
@@ -80,7 +82,7 @@ export const en = {
     itemsCount: '{count} items',
     duplicateTooltip: 'Duplicate entry',
     deleteTooltip: 'Delete entry',
-    addPromptBtn: '+ Add to {meal}',
+    addPromptBtn: 'Add to {meal}',
   },
   search: {
     title: 'Find food or log custom meal',

@@ -68,6 +68,8 @@ export const pl: Translations = {
     unit: 'kcal / dzień',
   },
   meals: {
+    sectionTitle: 'Dzisiejsze posiłki',
+    sectionSubtitle: 'Zarejestrowane dania i rozkład kalorii',
     breakfast: 'Śniadanie',
     breakfastDesc: 'Stabilna energia na dobry początek poranka.',
     lunch: 'Obiad',
@@ -82,7 +84,7 @@ export const pl: Translations = {
     itemsCount: '{count} poz.',
     duplicateTooltip: 'Powiel wpis',
     deleteTooltip: 'Usuń wpis',
-    addPromptBtn: '+ Dodaj do: {meal}',
+    addPromptBtn: 'Dodaj do: {meal}',
   },
   search: {
     title: 'Znajdź produkt lub dodaj własny',

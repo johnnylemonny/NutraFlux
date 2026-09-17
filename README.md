@@ -17,7 +17,7 @@
   **Your daily nutrition and calorie companion.**  
   NutraFlux is an accessible, commercial-grade web application for tracking daily calories and macronutrients without accounts, subscriptions, or invasive ads. 100% private, offline-ready, and community-funded.
 
-  [Live App](https://johnnylemonny.github.io/NutraFlux/) • [Report Feedback / Bug](https://github.com/johnnylemonny/NutraFlux/issues) • [Support the Project ☕](https://buymeacoffee.com/johnnylemonny)
+  [Live App](https://johnnylemonny.github.io/NutraFlux/) • [Report Feedback / Bug](https://github.com/johnnylemonny/NutraFlux/issues) • [Support the Project ☕](https://buymeacoffee.com/zdfpbnc5iv)
 
 </div>
 
@@ -123,7 +123,7 @@
 
 NutraFlux is completely free, open-source, and has no advertising or premium tiers. If this application helps you on your fitness or diet journey, consider supporting ongoing development:
 
-- ☕ **Buy Me a Coffee:** [buymeacoffee.com/johnnylemonny](https://buymeacoffee.com/johnnylemonny)
+- ☕ **Buy Me a Coffee:** [buymeacoffee.com/zdfpbnc5iv](https://buymeacoffee.com/zdfpbnc5iv)
 - 💖 **GitHub Sponsors:** [github.com/sponsors/johnnylemonny](https://github.com/sponsors/johnnylemonny)
 
 ---

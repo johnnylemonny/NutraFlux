@@ -25,6 +25,10 @@ describe('i18n and localization', () => {
     expect(pl.feedback.submitButton).toBeDefined()
     expect(en.feedback.thankYouToast).toBeDefined()
     expect(pl.feedback.thankYouToast).toBeDefined()
+    expect(en.meals.sectionTitle).toBeDefined()
+    expect(pl.meals.sectionTitle).toBeDefined()
+    expect(en.meals.sectionSubtitle).toBeDefined()
+    expect(pl.meals.sectionSubtitle).toBeDefined()
   })
 
   it('detects locale gracefully in environment without navigator', () => {

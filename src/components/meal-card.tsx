@@ -104,19 +104,22 @@ export function MealCard({
                   size="icon"
                   variant="ghost"
                   aria-label={`Duplicate ${entry.food.name}`}
+                  title="Duplicate entry"
                   onClick={() => onDuplicate(entry)}
+                  className="size-8 rounded-full border border-transparent hover:border-(--border-soft) hover:bg-(--surface-elevated) text-(--muted-foreground) hover:text-(--foreground) transition-all active:scale-90 cursor-pointer"
                 >
-                  <Copy className="size-4" />
+                  <Copy className="size-3.5" />
                 </Button>
                 <Button
                   type="button"
                   size="icon"
                   variant="ghost"
-                  className="hover:bg-(--tone-soft) hover:text-(--danger)"
+                  className="size-8 rounded-full border border-transparent hover:border-rose-500/30 hover:bg-rose-500/10 text-(--muted-foreground) hover:text-rose-600 dark:hover:text-rose-400 transition-all active:scale-90 cursor-pointer"
                   aria-label={`Delete ${entry.food.name}`}
+                  title="Delete entry"
                   onClick={() => onDelete(entry)}
                 >
-                  <Trash2 className="size-4" />
+                  <Trash2 className="size-3.5" />
                 </Button>
               </div>
             </li>
@@ -139,10 +142,10 @@ export function MealCard({
               variant="secondary"
               size="sm"
               onClick={onAddFirstItem}
-              className="mt-4 rounded-full border-(--border-strong) text-xs font-semibold hover:border-(--tone-strong) hover:bg-(--tone-soft-surface) hover:text-(--tone-strong) transition-all active:scale-95 cursor-pointer"
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-(--border-strong) bg-(--surface-elevated) px-4 py-2 text-xs font-bold text-(--foreground) hover:border-(--tone-strong) hover:bg-(--tone-soft-surface) hover:text-(--tone-strong) shadow-xs transition-all active:scale-95 cursor-pointer"
             >
-              <Plus className="mr-1.5 size-3.5" />
-              <span>{emptyActionLabel || `+ Add to ${title.toLowerCase()}`}</span>
+              <Plus className="size-3.5 text-(--tone-strong)" />
+              <span>{emptyActionLabel || `Add to ${title}`}</span>
             </Button>
           ) : null}
         </div>

@@ -51,7 +51,7 @@ export function SupportCard({ t, className = '' }: SupportCardProps) {
             className="rounded-full bg-(--tone-strong) px-8 py-6 text-sm font-bold text-white shadow-lg shadow-(--tone-strong)/25 transition-all hover:scale-105 active:scale-95 hover:bg-(--tone-strong)/90 cursor-pointer"
           >
             <a
-              href="https://buymeacoffee.com/johnnylemonny"
+              href="https://buymeacoffee.com/zdfpbnc5iv"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2.5"

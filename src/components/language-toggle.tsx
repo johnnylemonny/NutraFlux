@@ -1,4 +1,3 @@
-import { Languages } from 'lucide-react'
 import type { Locale } from '@/hooks/use-locale'
 
 interface LanguageToggleProps {
@@ -8,21 +7,38 @@ interface LanguageToggleProps {
 }
 
 export function LanguageToggle({ currentLocale, onToggle, className = '' }: LanguageToggleProps) {
-  const nextLocale = currentLocale === 'pl' ? 'en' : 'pl'
-  const nextLabel = currentLocale === 'pl' ? 'Switch to English' : 'Przełącz na język polski'
-
   return (
-    <button
-      type="button"
-      onClick={() => onToggle(nextLocale)}
-      aria-label={nextLabel}
-      title={nextLabel}
-      className={`group flex items-center gap-1.5 rounded-full border border-(--border-soft) bg-(--surface-elevated) px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-(--foreground) shadow-xs transition-all hover:border-(--border-strong) hover:bg-(--surface-subtle) active:scale-95 cursor-pointer ${className}`}
+    <div
+      role="group"
+      aria-label="Select language"
+      className={`inline-flex items-center rounded-full border border-(--border-soft) bg-(--surface-subtle) p-0.5 shadow-xs ${className}`}
     >
-      <Languages className="size-3.5 text-(--tone-strong) transition-transform group-hover:rotate-12" />
-      <span className={currentLocale === 'pl' ? 'text-(--tone-strong)' : 'opacity-60'}>PL</span>
-      <span className="opacity-40">/</span>
-      <span className={currentLocale === 'en' ? 'text-(--tone-strong)' : 'opacity-60'}>EN</span>
-    </button>
+      <button
+        type="button"
+        onClick={() => onToggle('pl')}
+        className={`rounded-full px-2 py-1 text-[11px] font-black tracking-tight transition-all cursor-pointer ${
+          currentLocale === 'pl'
+            ? 'bg-(--surface-elevated) text-(--tone-strong) shadow-xs'
+            : 'text-(--muted-foreground) hover:text-(--foreground)'
+        }`}
+        aria-pressed={currentLocale === 'pl'}
+        title="Język polski"
+      >
+        PL
+      </button>
+      <button
+        type="button"
+        onClick={() => onToggle('en')}
+        className={`rounded-full px-2 py-1 text-[11px] font-black tracking-tight transition-all cursor-pointer ${
+          currentLocale === 'en'
+            ? 'bg-(--surface-elevated) text-(--tone-strong) shadow-xs'
+            : 'text-(--muted-foreground) hover:text-(--foreground)'
+        }`}
+        aria-pressed={currentLocale === 'en'}
+        title="English"
+      >
+        EN
+      </button>
+    </div>
   )
 }
