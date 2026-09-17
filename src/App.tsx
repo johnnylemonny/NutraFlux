@@ -36,7 +36,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { Separator } from '@/components/ui/separator'
 import {
   featuredFoodCatalog,
   generatedFoodCatalogUrl,
@@ -86,6 +85,7 @@ function App() {
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false)
   const [selectedMeal, setSelectedMeal] = useState<MealKey>('breakfast')
+  const [searchTab, setSearchTab] = useState<'catalog' | 'custom'>('catalog')
   const [searchDraft, setSearchDraft] = useState('')
   const [submittedQuery, setSubmittedQuery] = useState('')
   const [searchWarning, setSearchWarning] = useState<string | null>(null)
@@ -585,56 +585,57 @@ function App() {
           </section>
 
           {/* TARGET SELECTION & QUICK PRESETS */}
-          <section className="card-panel rounded-4xl p-6 sm:p-8" aria-labelledby="target-title">
-            <div className="max-w-3xl space-y-6">
-              <div>
-                <h2 id="target-title" className="text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">
-                  {t.targets.title}
-                </h2>
-                <p className="mt-1 text-sm text-(--muted-foreground)">
-                  {t.targets.subtitle}
-                </p>
-              </div>
+          <section className="card-panel rounded-4xl p-6 sm:p-8 space-y-6" aria-labelledby="target-title">
+            <div>
+              <h2 id="target-title" className="text-2xl font-bold tracking-tight text-(--foreground) sm:text-3xl">
+                {t.targets.title}
+              </h2>
+              <p className="mt-1 text-sm text-(--muted-foreground)">
+                {t.targets.subtitle}
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {targetGoals.map((goal) => {
-                  const isCurrent = state.settings.dailyTarget === goal.calories
-                  return (
-                    <button
-                      key={goal.calories}
-                      type="button"
-                      onClick={() => setDailyTarget(goal.calories)}
-                      className={`flex flex-col items-start p-4 rounded-2xl border text-left transition-all active:scale-98 cursor-pointer ${
-                        isCurrent
-                          ? 'border-(--tone-strong) bg-(--tone-soft-surface) shadow-sm'
-                          : 'border-(--border-soft) bg-(--surface-subtle) hover:border-(--border-strong) hover:bg-(--surface-elevated)'
-                      }`}
-                    >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              {targetGoals.map((goal) => {
+                const isCurrent = state.settings.dailyTarget === goal.calories
+                return (
+                  <button
+                    key={goal.calories}
+                    type="button"
+                    onClick={() => setDailyTarget(goal.calories)}
+                    className={`flex flex-col justify-between p-4 rounded-2xl border text-left transition-all active:scale-98 cursor-pointer ${
+                      isCurrent
+                        ? 'border-(--tone-strong) bg-(--tone-soft-surface) shadow-sm ring-1 ring-(--tone-strong)/20'
+                        : 'border-(--border-soft) bg-(--surface-subtle) hover:border-(--border-strong) hover:bg-(--surface-elevated)'
+                    }`}
+                  >
+                    <div>
                       <div className="flex w-full items-center justify-between mb-1">
                         <span className="text-sm font-bold text-(--foreground)">{goal.label}</span>
                         {isCurrent ? <Check className="size-4 text-(--tone-strong)" /> : null}
                       </div>
-                      <div className="text-xl font-black text-(--tone-strong)">
+                      <div className="text-2xl font-black text-(--tone-strong)">
                         {goal.calories} <span className="text-xs font-normal text-(--muted-foreground)">kcal</span>
                       </div>
-                      <p className="mt-2 text-xs text-(--muted-foreground) leading-relaxed">
-                        {goal.desc}
-                      </p>
-                    </button>
-                  )
-                })}
-              </div>
+                    </div>
+                    <p className="mt-3 text-xs text-(--muted-foreground) leading-relaxed">
+                      {goal.desc}
+                    </p>
+                  </button>
+                )
+              })}
 
-              <div className="rounded-2xl border border-(--border-soft) bg-(--surface-subtle) p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <label htmlFor={targetInputId} className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
+              {/* Custom Goal Card */}
+              <div className="flex flex-col justify-between p-4 rounded-2xl border border-(--border-soft) bg-(--surface-subtle)">
+                <div>
+                  <label htmlFor={targetInputId} className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground) block mb-1">
                     {t.targets.customLabel}
                   </label>
-                  <div className="text-sm text-(--foreground) font-medium">
-                    {state.settings.dailyTarget} {t.targets.unit}
-                  </div>
+                  <p className="text-xs text-(--muted-foreground) leading-relaxed">
+                    {t.targets.customDesc}
+                  </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="mt-3 flex items-center gap-2">
                   <Input
                     id={targetInputId}
                     type="number"
@@ -648,9 +649,9 @@ function App() {
                         setDailyTarget(val)
                       }
                     }}
-                    className="w-28 text-center font-black"
+                    className="w-full text-center font-black text-lg rounded-xl"
                   />
-                  <span className="text-xs font-bold text-(--muted-foreground)">kcal</span>
+                  <span className="text-xs font-bold text-(--muted-foreground) shrink-0">kcal</span>
                 </div>
               </div>
             </div>
@@ -662,7 +663,7 @@ function App() {
             <aside className="card-panel rounded-4xl p-6 sm:p-8 space-y-6">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-(--foreground)">
-                  {t.meals.emptyPrompt.split('.')[0]}
+                  {t.search.mealFocusTitle}
                 </h2>
                 <p className="mt-1 text-sm text-(--muted-foreground)">
                   {t.search.subtitle}
@@ -747,184 +748,250 @@ function App() {
               </div>
             </aside>
 
-            {/* Right: Food Search & Custom Food */}
+            {/* Right: Food Search & Custom Food with Tabs */}
             <div className="card-panel rounded-4xl p-6 sm:p-8 space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-(--foreground)">
-                  {t.search.title}
-                </h2>
-                <p className="mt-1 text-sm text-(--muted-foreground)">
-                  {t.search.subtitle}
-                </p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight text-(--foreground)">
+                    {t.search.title}
+                  </h2>
+                  <p className="mt-1 text-sm text-(--muted-foreground)">
+                    {t.search.subtitle}
+                  </p>
+                </div>
+
+                {/* Tab Switcher */}
+                <div className="flex rounded-2xl border border-(--border-soft) bg-(--surface-subtle) p-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setSearchTab('catalog')}
+                    className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                      searchTab === 'catalog'
+                        ? 'bg-(--surface-elevated) text-(--foreground) shadow-xs'
+                        : 'text-(--muted-foreground) hover:text-(--foreground)'
+                    }`}
+                  >
+                    {t.search.tabCatalog}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSearchTab('custom')}
+                    className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+                      searchTab === 'custom'
+                        ? 'bg-(--surface-elevated) text-(--foreground) shadow-xs'
+                        : 'text-(--muted-foreground) hover:text-(--foreground)'
+                    }`}
+                  >
+                    {t.search.tabCustom}
+                  </button>
+                </div>
               </div>
 
-              {/* Search Form */}
-              <form
-                className="flex flex-col sm:flex-row gap-2"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  void runSearch()
-                }}
-              >
-                <div className="relative flex-1">
-                  <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-(--muted-foreground)" />
-                  <Input
-                    value={searchDraft}
-                    onFocus={() => {
-                      if (catalogLoadState === 'idle') {
-                        void ensureFoodCatalogLoaded()
-                      }
+              {searchTab === 'catalog' ? (
+                <>
+                  {/* Search Form */}
+                  <form
+                    className="flex flex-col sm:flex-row gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      void runSearch()
                     }}
-                    onChange={(e) => setSearchDraft(e.target.value)}
-                    placeholder={t.search.placeholder}
-                    className="pl-10 rounded-2xl"
-                  />
-                </div>
-                <div className="flex gap-2">
-                  <Button type="submit" className="rounded-2xl bg-(--tone-strong) text-white font-bold">
-                    <Search className="mr-1.5 size-4" />
-                    <span>{locale === 'pl' ? 'Szukaj' : 'Search'}</span>
-                  </Button>
-                  {submittedQuery ? (
-                    <Button type="button" variant="secondary" onClick={clearSearch} className="rounded-2xl">
-                      <X className="size-4" />
-                    </Button>
+                  >
+                    <div className="relative flex-1">
+                      <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-(--muted-foreground)" />
+                      <Input
+                        value={searchDraft}
+                        onFocus={() => {
+                          if (catalogLoadState === 'idle') {
+                            void ensureFoodCatalogLoaded()
+                          }
+                        }}
+                        onChange={(e) => setSearchDraft(e.target.value)}
+                        placeholder={t.search.placeholder}
+                        className="pl-10 rounded-2xl"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button type="submit" className="rounded-2xl bg-(--tone-strong) text-white font-bold cursor-pointer">
+                        <Search className="mr-1.5 size-4" />
+                        <span>{locale === 'pl' ? 'Szukaj' : 'Search'}</span>
+                      </Button>
+                      {submittedQuery ? (
+                        <Button type="button" variant="secondary" onClick={clearSearch} className="rounded-2xl cursor-pointer">
+                          <X className="size-4" />
+                        </Button>
+                      ) : null}
+                    </div>
+                  </form>
+
+                  {searchWarning ? (
+                    <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-3.5 text-xs text-amber-900 dark:text-amber-200">
+                      <AlertCircle className="size-4 shrink-0 mt-0.5 text-amber-600" />
+                      <span>{searchWarning}</span>
+                    </div>
                   ) : null}
-                </div>
-              </form>
 
-              {searchWarning ? (
-                <div className="flex items-start gap-2.5 rounded-2xl border border-amber-500/20 bg-amber-500/10 p-3.5 text-xs text-amber-900 dark:text-amber-200">
-                  <AlertCircle className="size-4 shrink-0 mt-0.5 text-amber-600" />
-                  <span>{searchWarning}</span>
-                </div>
-              ) : null}
+                  {/* Food Results List */}
+                  <div className="space-y-3">
+                    <div className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground) flex items-center justify-between">
+                      <span>{t.search.suggestedFoods}</span>
+                      <span>{visibleFoodResults.length} {t.meals.itemsCount.replace('{count}', '')}</span>
+                    </div>
 
-              {/* Food Results List */}
-              <div className="space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground) flex items-center justify-between">
-                  <span>{t.search.suggestedFoods}</span>
-                  <span>{visibleFoodResults.length} {t.meals.itemsCount.replace('{count}', '')}</span>
-                </div>
+                    <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
+                      {visibleFoodResults.map((food) => {
+                        const isSelected = selectedFood?.id === food.id
+                        return (
+                          <div
+                            key={food.id}
+                            onClick={() => setSelectedFoodId(food.id)}
+                            className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
+                              isSelected
+                                ? 'border-(--tone-strong) bg-(--tone-soft-surface)'
+                                : 'border-(--border-soft) bg-(--surface-subtle) hover:bg-(--surface-elevated)'
+                            }`}
+                          >
+                            <div className="space-y-0.5">
+                              <div className="text-sm font-bold text-(--foreground)">{food.name}</div>
+                              <div className="text-xs text-(--muted-foreground)">
+                                {food.servingLabel} • {formatMacroSummary(food.macros)}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm font-black text-(--tone-strong)">
+                                {food.calories} <span className="text-xs font-normal text-(--muted-foreground)">kcal</span>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
 
-                <div className="max-h-72 overflow-y-auto space-y-2 pr-1">
-                  {visibleFoodResults.map((food) => {
-                    const isSelected = selectedFood?.id === food.id
-                    return (
-                      <div
-                        key={food.id}
-                        onClick={() => setSelectedFoodId(food.id)}
-                        className={`flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer ${
-                          isSelected
-                            ? 'border-(--tone-strong) bg-(--tone-soft-surface)'
-                            : 'border-(--border-soft) bg-(--surface-subtle) hover:bg-(--surface-elevated)'
-                        }`}
-                      >
-                        <div className="space-y-0.5">
-                          <div className="text-sm font-bold text-(--foreground)">{food.name}</div>
-                          <div className="text-xs text-(--muted-foreground)">
-                            {food.servingLabel} • {formatMacroSummary(food.macros)}
+                    {/* Add Selected Food Action */}
+                    {selectedFood ? (
+                      <div className="rounded-2xl border border-(--tone-soft-border) bg-(--tone-soft-surface) p-4 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="text-xs font-bold uppercase tracking-wider text-(--tone-strong)">
+                              {selectedFood.name}
+                            </div>
+                            <div className="text-sm text-(--muted-foreground)">
+                              {selectedFood.calories * servings} kcal ({servings}× {selectedFood.servingLabel})
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setServings((s) => Math.max(0.5, s - 0.5))}
+                              className="h-8 w-8 rounded-full p-0 font-bold cursor-pointer"
+                            >
+                              -
+                            </Button>
+                            <span className="text-sm font-black w-8 text-center">{servings}×</span>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => setServings((s) => s + 0.5)}
+                              className="h-8 w-8 rounded-full p-0 font-bold cursor-pointer"
+                            >
+                              +
+                            </Button>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm font-black text-(--tone-strong)">
-                            {food.calories} <span className="text-xs font-normal text-(--muted-foreground)">kcal</span>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
 
-                {/* Add Selected Food Action */}
-                {selectedFood ? (
-                  <div className="rounded-2xl border border-(--tone-soft-border) bg-(--tone-soft-surface) p-4 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-xs font-bold uppercase tracking-wider text-(--tone-strong)">
-                          {selectedFood.name}
-                        </div>
-                        <div className="text-sm text-(--muted-foreground)">
-                          {selectedFood.calories * servings} kcal ({servings}× {selectedFood.servingLabel})
-                        </div>
+                        <Button
+                          type="button"
+                          onClick={handleAddCatalogFood}
+                          className="w-full rounded-full bg-(--tone-strong) text-white font-bold shadow-sm hover:bg-(--tone-strong)/90 active:scale-95 transition-all cursor-pointer"
+                        >
+                          <Plus className="mr-1.5 size-4" />
+                          {t.search.addToMeal.replace('{meal}', t.meals[selectedMeal])}
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-2">
+                    ) : null}
+                  </div>
+                </>
+              ) : (
+                /* Custom Food Form Tab */
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="sm:col-span-2">
+                      <label className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
+                        {t.search.customNameLabel}
+                      </label>
+                      <Input
+                        value={customName}
+                        onChange={(e) => setCustomName(e.target.value)}
+                        placeholder={t.search.customNamePlaceholder}
+                        className="mt-1 rounded-2xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
+                        {t.search.customCaloriesLabel}
+                      </label>
+                      <Input
+                        type="number"
+                        value={customCalories}
+                        onChange={(e) => setCustomCalories(e.target.value)}
+                        className="mt-1 rounded-2xl"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
+                        {t.search.customServingLabel}
+                      </label>
+                      <Input
+                        value={customServingLabel}
+                        onChange={(e) => setCustomServingLabel(e.target.value)}
+                        placeholder={t.search.customServingPlaceholder}
+                        className="mt-1 rounded-2xl"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
+                        {t.search.servingSize}
+                      </label>
+                      <div className="mt-1 flex items-center gap-2">
                         <Button
                           type="button"
                           variant="secondary"
                           size="sm"
-                          onClick={() => setServings((s) => Math.max(0.5, s - 0.5))}
-                          className="h-8 w-8 rounded-full p-0 font-bold"
+                          onClick={() => setCustomServings((s) => Math.max(0.5, s - 0.5))}
+                          className="h-10 w-10 rounded-xl font-bold cursor-pointer"
                         >
                           -
                         </Button>
-                        <span className="text-sm font-black w-8 text-center">{servings}×</span>
+                        <span className="text-sm font-black w-10 text-center">{customServings}×</span>
                         <Button
                           type="button"
                           variant="secondary"
                           size="sm"
-                          onClick={() => setServings((s) => s + 0.5)}
-                          className="h-8 w-8 rounded-full p-0 font-bold"
+                          onClick={() => setCustomServings((s) => s + 0.5)}
+                          className="h-10 w-10 rounded-xl font-bold cursor-pointer"
                         >
                           +
                         </Button>
                       </div>
                     </div>
-
-                    <Button
-                      type="button"
-                      onClick={handleAddCatalogFood}
-                      className="w-full rounded-full bg-(--tone-strong) text-white font-bold shadow-sm hover:bg-(--tone-strong)/90"
-                    >
-                      <Plus className="mr-1.5 size-4" />
-                      {t.search.addToMeal.replace('{meal}', t.meals[selectedMeal])}
-                    </Button>
                   </div>
-                ) : null}
-              </div>
 
-              <Separator />
-
-              {/* Custom Food Form */}
-              <div className="space-y-4">
-                <div className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">
-                  {t.search.customTab}
+                  <Button
+                    type="button"
+                    onClick={handleAddCustomFood}
+                    className="w-full rounded-full bg-(--tone-strong) text-white font-bold shadow-sm hover:bg-(--tone-strong)/90 active:scale-95 transition-all cursor-pointer py-6"
+                  >
+                    <Plus className="mr-1.5 size-4" />
+                    {t.search.addToMeal.replace('{meal}', t.meals[selectedMeal])}
+                  </Button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="sm:col-span-2">
-                    <label className="text-[11px] font-semibold text-(--muted-foreground)">
-                      {t.search.customNameLabel}
-                    </label>
-                    <Input
-                      value={customName}
-                      onChange={(e) => setCustomName(e.target.value)}
-                      placeholder={t.search.customNamePlaceholder}
-                      className="mt-1 rounded-xl"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[11px] font-semibold text-(--muted-foreground)">
-                      {t.search.customCaloriesLabel}
-                    </label>
-                    <Input
-                      type="number"
-                      value={customCalories}
-                      onChange={(e) => setCustomCalories(e.target.value)}
-                      className="mt-1 rounded-xl"
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleAddCustomFood}
-                  className="w-full rounded-full border-(--border-strong) font-bold"
-                >
-                  <Plus className="mr-1.5 size-4 text-(--tone-strong)" />
-                  {t.search.addCustomButton}
-                </Button>
-              </div>
+              )}
             </div>
           </section>
 
@@ -941,7 +1008,8 @@ function App() {
               </div>
             </div>
 
-            <div className="grid gap-6">
+            {/* 2x2 Responsive Grid for 27" Desktop and Clean 1-Column on Mobile */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {mealSummaries.map((summary) => (
                 <MealCard
                   key={summary.key}
@@ -950,6 +1018,11 @@ function App() {
                   localizedDescription={t.meals[`${summary.key}Desc` as keyof typeof t.meals]}
                   emptyTitle={t.meals.emptyTitle}
                   emptyPrompt={t.meals.emptyPrompt}
+                  emptyActionLabel={t.meals.addPromptBtn.replace('{meal}', t.meals[summary.key])}
+                  onAddFirstItem={() => {
+                    setSelectedMeal(summary.key)
+                    document.getElementById('tracker')?.scrollIntoView({ behavior: 'smooth' })
+                  }}
                   onDuplicate={handleDuplicateEntry}
                   onDelete={handleDeleteEntry}
                   isHighlightedEntry={(entryId) => entryId === lastAddedEntryId}

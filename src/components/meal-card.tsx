@@ -1,4 +1,4 @@
-import { Copy, Flame, Trash2 } from 'lucide-react'
+import { Copy, Flame, Plus, Trash2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -10,20 +10,24 @@ export function MealCard({
   summary,
   onDuplicate,
   onDelete,
+  onAddFirstItem,
   isHighlightedEntry,
   localizedLabel,
   localizedDescription,
   emptyTitle,
   emptyPrompt,
+  emptyActionLabel,
 }: {
   summary: MealSummary
   onDuplicate: (entry: Entry) => void
   onDelete: (entry: Entry) => void
+  onAddFirstItem?: () => void
   isHighlightedEntry: (entryId: string) => boolean
   localizedLabel?: string
   localizedDescription?: string
   emptyTitle?: string
   emptyPrompt?: string
+  emptyActionLabel?: string
 }) {
   const mealToneClass = `meal-${summary.key}`
   const title = localizedLabel || summary.label
@@ -119,16 +123,28 @@ export function MealCard({
           ))}
         </ul>
       ) : (
-        <div className="rounded-[1.8rem] border border-dashed border-(--border-soft) bg-(--surface-subtle) px-5 py-8 text-center">
-          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-(--surface-elevated) text-(--tone-strong)">
+        <div className="rounded-[1.8rem] border border-dashed border-(--border-soft) bg-(--surface-subtle) px-5 py-7 text-center transition-all hover:border-(--tone-soft-border)">
+          <div className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-(--surface-elevated) text-(--tone-strong) shadow-xs">
             <Flame className="size-5" />
           </div>
-          <h4 className="text-lg font-semibold text-(--foreground)">
+          <h4 className="text-base font-semibold text-(--foreground)">
             {emptyTitle || 'Nothing logged yet'}
           </h4>
-          <p className="mt-2 text-sm text-(--muted-foreground)">
+          <p className="mt-1.5 text-xs text-(--muted-foreground) max-w-[28ch] mx-auto">
             {emptyPrompt || 'Add your first item to start building a clean daily picture.'}
           </p>
+          {onAddFirstItem ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={onAddFirstItem}
+              className="mt-4 rounded-full border-(--border-strong) text-xs font-semibold hover:border-(--tone-strong) hover:bg-(--tone-soft-surface) hover:text-(--tone-strong) transition-all active:scale-95 cursor-pointer"
+            >
+              <Plus className="mr-1.5 size-3.5" />
+              <span>{emptyActionLabel || `+ Add to ${title.toLowerCase()}`}</span>
+            </Button>
+          ) : null}
         </div>
       )}
     </section>

@@ -13,6 +13,18 @@ describe('i18n and localization', () => {
     expect(pl.hero.titleLine1).toBeDefined()
     expect(en.faq.q1).toBeDefined()
     expect(pl.faq.q1).toBeDefined()
+    expect(en.search.tabCatalog).toBeDefined()
+    expect(pl.search.tabCatalog).toBeDefined()
+    expect(en.search.tabCustom).toBeDefined()
+    expect(pl.search.tabCustom).toBeDefined()
+    expect(en.search.mealFocusTitle).toBeDefined()
+    expect(pl.search.mealFocusTitle).toBeDefined()
+    expect(en.meals.addPromptBtn).toBeDefined()
+    expect(pl.meals.addPromptBtn).toBeDefined()
+    expect(en.feedback.submitButton).toBeDefined()
+    expect(pl.feedback.submitButton).toBeDefined()
+    expect(en.feedback.thankYouToast).toBeDefined()
+    expect(pl.feedback.thankYouToast).toBeDefined()
   })
 
   it('detects locale gracefully in environment without navigator', () => {

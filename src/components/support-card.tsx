@@ -45,35 +45,19 @@ export function SupportCard({ t, className = '' }: SupportCardProps) {
           {t.support.subtitle}
         </p>
 
-        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <div className="mt-6 flex justify-center">
           <Button
             asChild
-            className="rounded-full bg-(--tone-strong) px-8 text-sm font-bold text-white shadow-md shadow-(--tone-strong)/20 transition-all hover:scale-105 active:scale-95 hover:bg-(--tone-strong)/90"
+            className="rounded-full bg-(--tone-strong) px-8 py-6 text-sm font-bold text-white shadow-lg shadow-(--tone-strong)/25 transition-all hover:scale-105 active:scale-95 hover:bg-(--tone-strong)/90 cursor-pointer"
           >
             <a
               href="https://buymeacoffee.com/johnnylemonny"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2"
+              className="inline-flex items-center gap-2.5"
             >
               <Coffee className="size-5" />
               <span>{t.support.ctaButton}</span>
-            </a>
-          </Button>
-
-          <Button
-            asChild
-            variant="secondary"
-            className="rounded-full border-(--border-strong) text-sm font-semibold transition-all hover:scale-105 active:scale-95"
-          >
-            <a
-              href="https://github.com/sponsors/johnnylemonny"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2"
-            >
-              <Heart className="size-4 text-pink-500 fill-pink-500/20" />
-              <span>GitHub Sponsors</span>
             </a>
           </Button>
         </div>

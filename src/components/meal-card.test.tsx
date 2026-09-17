@@ -75,4 +75,24 @@ describe('MealCard component', () => {
     fireEvent.click(deleteButton)
     expect(handleDelete).toHaveBeenCalledWith(sampleEntry)
   })
+
+  it('triggers onAddFirstItem callback when action button in empty state is clicked', () => {
+    const handleAddFirst = vi.fn()
+
+    render(
+      <MealCard
+        summary={emptySummary}
+        onDuplicate={vi.fn()}
+        onDelete={vi.fn()}
+        onAddFirstItem={handleAddFirst}
+        emptyActionLabel="+ Add to breakfast"
+        isHighlightedEntry={() => false}
+      />,
+    )
+
+    const addButton = screen.getByRole('button', { name: /\+ Add to breakfast/i })
+    expect(addButton).toBeInTheDocument()
+    fireEvent.click(addButton)
+    expect(handleAddFirst).toHaveBeenCalledOnce()
+  })
 })
