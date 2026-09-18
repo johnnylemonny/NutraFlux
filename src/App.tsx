@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { track } from '@vercel/analytics'
 
 import { FaqSection } from '@/components/faq-section'
 import { FeedbackDialog } from '@/components/feedback-dialog'
@@ -206,6 +207,8 @@ function App() {
       food: createFoodSnapshot(selectedFood),
     })
 
+    track('meal_entry_added', { meal: selectedMeal, calories: entry.totalCalories })
+
     const mealName = t.meals[selectedMeal]
     toast.success(
       <div>
@@ -257,6 +260,8 @@ function App() {
         calories: parsedCalories,
       },
     })
+
+    track('meal_entry_added', { meal: selectedMeal, calories: entry.totalCalories, type: 'custom' })
 
     const mealName = t.meals[selectedMeal]
     toast.success(
@@ -313,6 +318,7 @@ function App() {
           title: 'NutraFlux Daily Summary',
           text: summaryText,
         })
+        track('summary_shared', { method: 'web_share', locale })
         toast.success(t.toasts.summaryShared)
         return
       } catch (err) {
@@ -325,6 +331,7 @@ function App() {
     if (typeof navigator !== 'undefined' && navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(summaryText)
+        track('summary_shared', { method: 'clipboard', locale })
         toast.success(t.toasts.summaryCopied)
         return
       } catch {
